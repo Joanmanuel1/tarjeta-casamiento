@@ -17,6 +17,7 @@ import BackToTop from './components/BackToTop.vue'
 import DressCodeSection from './components/DressCodeSection.vue'
 import TipsSection from './components/TipsSection.vue'
 import MusicSection from './components/MusicSection.vue'
+import GuestAdmin from './components/GuestAdmin.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -166,6 +167,9 @@ onMounted(() => {
       </section>
 
       <RSVPForm id="rsvp" class="section-reveal" />
+      
+      <!-- ABM Invitados (Temporal) -->
+      <GuestAdmin id="admin-guests" />
     </main>
 
     <footer class="wedding-footer">
