@@ -167,7 +167,21 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
           <h2 class="GreatVibes display-4 mb-2">¿Quién nos acompaña?</h2>
           <p class="text-muted small">Buscá tu nombre o apellido</p>
         </div>
+        <!-- Sticky Top Actions Bar -->
+        <div class="sticky-top-actions p-3 mb-3 bg-white border rounded-4 shadow-sm animate-fade-in"
+          v-if="!showResults && selectedGuests.length > 0">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold text-uppercase tracking-widest text-muted small mb-0">Tus Invitados</h6>
+            <span class="badge rounded-pill bg-primary px-3">{{ selectedGuests.length }}</span>
+          </div>
 
+          <div class="d-flex gap-2">
+            <Button label="Cancelar" severity="secondary" class="flex-grow-1 py-2 rounded-pill border-0 o-75 small"
+              @click="resetAll" />
+            <Button :label="isSubmitting ? 'Enviando...' : 'Confirmar ❤️'" severity="success"
+              class="flex-grow-1 py-2 rounded-pill mb-0 small" :loading="isSubmitting" @click="submitAll" />
+          </div>
+        </div>
         <!-- Search Area -->
         <div class="search-experience-fixed mb-4">
           <div class="search-pill-premium d-flex align-items-center p-2 rounded-pill shadow-sm border bg-white">
@@ -198,14 +212,11 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
           </div>
         </div>
 
-        <!-- Confirmation List (Appears as you select) -->
-        <div class="confirmation-area" v-if="selectedGuests.length > 0">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="fw-bold text-uppercase tracking-widest text-muted small mb-0">Tus Invitados</h6>
-            <span class="badge rounded-pill bg-primary px-3">{{ selectedGuests.length }}</span>
-          </div>
+        <!-- Confirmation Area (Top-Action Layout) -->
+        <div class="confirmation-area d-flex flex-column" v-if="selectedGuests.length > 0">
 
-          <div class="selected-list custom-scroll">
+          <!-- Scrollable Selected List -->
+          <div class="selected-list custom-scroll pe-1" style="max-height: 50dvh; overflow-y: auto;">
             <div v-for="guest in selectedGuests" :key="guest.id"
               class="confirm-card-compact p-3 rounded-4 mb-3 bg-white shadow-sm border animate-drop-in">
               <div class="d-flex align-items-center justify-content-between mb-3">
@@ -238,14 +249,6 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
                   class="w-100 p-2 rounded-pill bg-light border-0 small px-3" style="color: black;" />
               </div>
             </div>
-          </div>
-
-          <!-- Sticky Submit Button (Hidden when searching on mobile) -->
-          <div v-if="!showResults" class="submit-wrap sticky-bottom p-4 bg-white border-top shadow-lg-up d-flex gap-3">
-            <Button label="Cancelar" severity="secondary" class="w-50 py-3 rounded-pill border-0 o-75"
-              @click="resetAll" />
-            <Button :label="isSubmitting ? 'Enviando...' : 'Confirmar ❤️'" severity="success"
-              class="w-50 py-3 rounded-pill mb-0" :loading="isSubmitting" @click="submitAll" />
           </div>
         </div>
 
@@ -309,7 +312,8 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
   box-shadow: none !important;
   font-size: 1.1rem !important;
   color: var(--text-dark) !important;
-  min-width: 0; /* Important for flex-shrink on mobile */
+  min-width: 0;
+  /* Important for flex-shrink on mobile */
   width: 100%;
 }
 
@@ -434,19 +438,11 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
   }
 }
 
-/* Footer & Button (Sticky version for better mobile compatibility) */
-.submit-wrap {
-  z-index: 1000;
-  border-radius: 30px 30px 0 0;
-  margin-left: -1rem; /* Adjust for parent padding if needed */
-  margin-right: -1rem;
-}
-
-.sticky-bottom {
+/* Top Actions Bar */
+.sticky-top-actions {
   position: sticky;
-  bottom: 0;
-  margin-top: auto;
-  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+  top: 0;
+  z-index: 100;
 }
 
 .shadow-lg-up {

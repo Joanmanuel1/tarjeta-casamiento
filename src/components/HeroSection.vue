@@ -36,7 +36,7 @@ onMounted(() => {
       <div class="hero-text-overlay text-center text-white">
         <div class="hero-badge-minimal mb-3">06 . 11 . 27</div>
 
-        <h1 class="GreatVibes hero-names display-1 mb-2">JPEPEPEPEP joan & Stephie</h1>
+        <h1 class="GreatVibes hero-names display-1 mb-2">Joan & Stephie</h1>
 
         <p class="hero-msg-premium mb-4 mx-auto opacity-90 fw-medium">
           Nuestra historia, nuestro día, para siempre.
