@@ -162,10 +162,10 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
       </div>
 
       <!-- MAIN FLOW: SEARCH & CONFIRM -->
-      <div v-else class="fluid-wizard">
+      <div v-else class="fluid-wizard d-flex flex-column" style="min-height: 80vh;">
         <div class="text-center mb-4">
           <h2 class="GreatVibes display-4 mb-2">¿Quién nos acompaña?</h2>
-          <p class="text-muted small">Buscá tu nombre y confirmá tu asistencia</p>
+          <p class="text-muted small">Buscá tu nombre o apellido</p>
         </div>
 
         <!-- Search Area -->
@@ -241,7 +241,7 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
           </div>
 
           <!-- Sticky Submit Button (Hidden when searching on mobile) -->
-          <div v-if="!showResults" class="submit-wrap fixed-bottom p-4 bg-white border-top shadow-lg-up d-flex gap-3">
+          <div v-if="!showResults" class="submit-wrap sticky-bottom p-4 bg-white border-top shadow-lg-up d-flex gap-3">
             <Button label="Cancelar" severity="secondary" class="w-50 py-3 rounded-pill border-0 o-75"
               @click="resetAll" />
             <Button :label="isSubmitting ? 'Enviando...' : 'Confirmar ❤️'" severity="success"
@@ -309,6 +309,8 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
   box-shadow: none !important;
   font-size: 1.1rem !important;
   color: var(--text-dark) !important;
+  min-width: 0; /* Important for flex-shrink on mobile */
+  width: 100%;
 }
 
 .results-overlay {
@@ -432,10 +434,19 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
   }
 }
 
-/* Footer & Button */
+/* Footer & Button (Sticky version for better mobile compatibility) */
 .submit-wrap {
   z-index: 1000;
   border-radius: 30px 30px 0 0;
+  margin-left: -1rem; /* Adjust for parent padding if needed */
+  margin-right: -1rem;
+}
+
+.sticky-bottom {
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
 }
 
 .shadow-lg-up {
