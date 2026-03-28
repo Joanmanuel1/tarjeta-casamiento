@@ -1,8 +1,9 @@
 <script setup>
-import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import gsap from 'gsap'
+import confetti from 'canvas-confetti'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
-import confetti from 'canvas-confetti'
 import { auth } from '../firebase/config'
 import { searchTracks } from '../services/musicSearchService'
 import { addOrVoteSong, listenToTopSongs, getUserVotes } from '../services/musicService'
@@ -14,11 +15,18 @@ const userVotes = ref([])
 const isSearching = ref(false)
 const isVoting = ref(false)
 const unsubscribe = ref(null)
-const currentPlaying = ref(null) // ID of the song currently playing
+const currentPlaying = ref(null)
 
 const audio = new Audio()
+const popularSuggestions = [
+  { id: '1695210251', name: 'La Morocha', artist: 'Luck Ra & BM', image: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/86/9b/cd/869bcda4-b00b-d03d-cfd5-3da458924acc/196871259309.jpg/300x300bb.jpg', preview: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/ca/31/39/ca313924-625a-84e2-9698-c90fd726755c/mzaf_9300804319953101433.plus.aac.p.m4a' },
+  { id: '1481250833', name: 'Hola Mi Amor', artist: 'Andy Erazo', image: 'https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/02/8b/4d/028b4d84-9f43-7567-e951-ac2ea8211ff5/artwork.jpg/300x300bb.jpg', preview: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview123/v4/a5/3a/2d/a53a2def-e840-95f5-3f18-6168f0af84d6/mzaf_622439657094906801.plus.aac.p.m4a' },
+  { id: '1805898711', name: 'Inocente', artist: 'La Delio Valdez', image: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/42/60/36/42603647-52fb-d398-4b58-8746cdae52ee/cover.jpg/300x300bb.jpg', preview: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a3/7b/31/a37b31f0-e3c9-ed01-e013-573f7a1e3895/mzaf_505785615841328097.plus.aac.p.m4a' },
+  { id: '844221956', name: 'Mentirosa', artist: 'Ráfaga', image: 'https://is1-ssl.mzstatic.com/image/thumb/Music4/v4/a6/3b/9d/a63b9d36-4686-6717-341a-71aaa5581ba3/0605457535428.jpg/300x300bb.jpg', preview: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/ca/c7/e4/cac7e410-00ff-bce3-cd62-bb24ddd2bb13/mzaf_11411235403191366139.plus.aac.p.m4a' }
+]
 
 const togglePreview = (song) => {
+  if (!song.preview) return
   if (currentPlaying.value === song.id) {
     audio.pause()
     currentPlaying.value = null
@@ -39,40 +47,37 @@ watch(searchQuery, (newQuery) => {
     searchResults.value = []
     return
   }
-
   isSearching.value = true
   searchTimeout = setTimeout(async () => {
     searchResults.value = await searchTracks(newQuery)
     isSearching.value = false
-  }, 500)
+    nextTick(() => {
+      gsap.from('.music-search-result', { opacity: 0, x: -10, stagger: 0.1, duration: 0.4 })
+    })
+  }, 400)
 })
 
 const handleVote = async (song) => {
   if (isVoting.value || userVotes.value.length >= 3) return
-
   const uid = auth.currentUser?.uid
   if (!uid) return
 
   isVoting.value = true
   try {
     await addOrVoteSong(song, uid)
-    userVotes.value.push(song.id)
+    if (!userVotes.value.includes(song.id)) {
+      userVotes.value.push(song.id)
+    }
 
     confetti({
-      particleCount: 150,
+      particleCount: 100,
       spread: 70,
-      origin: { y: 0.7 },
-      colors: ['#1DB954', '#191414', '#ffffff'] // Spotify colors
+      origin: { y: 0.6 },
+      colors: ['#a8a29e', '#d4a373', '#fdfbf7']
     })
-
     searchQuery.value = ''
     searchResults.value = []
   } catch (error) {
-    if (error.message === 'LIMIT_REACHED') {
-      alert('¡Ya alcanzaste tu límite de 3 canciones!')
-    } else if (error.message === 'ALREADY_VOTED') {
-      alert('Ya votaste por esta canción.')
-    }
     console.error('Error voting:', error)
   } finally {
     isVoting.value = false
@@ -80,16 +85,14 @@ const handleVote = async (song) => {
 }
 
 onMounted(async () => {
-  // Wait for auth to initialize
   auth.onAuthStateChanged(async (user) => {
     if (user) {
       userVotes.value = await getUserVotes(user.uid)
     }
   })
-
   unsubscribe.value = listenToTopSongs((songs) => {
     topSongs.value = songs
-  }, 5)
+  })
 })
 
 onUnmounted(() => {
@@ -99,274 +102,296 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="music-section section-reveal py-5">
-    <div class="container-fluid px-4 px-md-5">
-      <div class="row g-4 justify-content-center" style="height: 700px;">
+  <section class="music-section py-5 bg-music">
+    <div class="container-fluid maxWidth-md">
+      <div class="text-center mb-5 section-reveal">
+        <span class="section-tag mb-2">Ambiente</span>
+        <h2 class="GreatVibes display-4 mb-3">La Música que nos une</h2>
+        <p class="text-muted small mx-auto" style="max-width: 450px;">
+          Ayudanos a armar la playlist de la fiesta. <br>
+          ¡Podés sugerir hasta 3 canciones!
+        </p>
+      </div>
 
-        <!-- Search & Info Card -->
-        <div class="col-lg-6">
-          <div class="card music-card spotify-dark border-0 h-100 p-4 p-md-5 shadow-xl">
-            <div class="header-content mb-4">
-              <div class="d-flex align-items-center mb-3">
-                <i class="pi pi-spotify text-success fs-1 me-3"></i>
-                <h2 class="fw-bold mb-0">Playlist de la Fiesta</h2>
+      <div class="row g-4 justify-content-center">
+        <!-- 1. Search & Suggestions -->
+        <div class="col-lg-7">
+          <div class="music-card-premium p-4 p-md-5 rounded-5 shadow-sm bg-white border-light">
+            <div class="search-experience mb-4">
+              <div class="search-input-wrapper mb-3 position-relative">
+                <i class="pi pi-search search-icon"></i>
+                <InputText v-model="searchQuery" placeholder="Buscá artistas o canciones..."
+                  class="w-100 premium-input py-3 rounded-pill px-5" :disabled="userVotes.length >= 3" />
+                <div v-if="isSearching" class="spinner-border spinner-border-sm text-primary search-spinner"
+                  role="status"></div>
               </div>
-              <p class="text-white-50 small">Buscá y votá tus temas favoritos. Límite: 3 votos por persona.</p>
 
-              <!-- Vote Counter -->
-              <div class="vote-quota d-flex gap-2 mt-3">
-                <div v-for="i in 3" :key="i" class="quota-dot" :class="{ 'active': userVotes.length >= i }"></div>
-                <span class="ms-2 small text-white-50">{{ 3 - userVotes.length }} votos restantes</span>
+              <div class="votos-info d-flex align-items-center gap-3 ps-2">
+                <div class="quota-dots d-flex gap-1">
+                  <div v-for="i in 3" :key="i" class="dot" :class="{ 'active': userVotes.length >= i }"></div>
+                </div>
+                <span class="small fw-bold text-muted">{{ 3 - userVotes.length }} votos restantes</span>
               </div>
             </div>
 
-            <div class="search-container position-relative mb-4">
-              <span class="p-input-icon-left w-100">
-                <i class="pi pi-search text-white-50" />
-                <InputText v-model="searchQuery" placeholder="Artistas, canciones..."
-                  class="w-100 p-3 bg-dark-soft text-white border-0 rounded-3 shadow-inner"
-                  :disabled="userVotes.length >= 3" />
-              </span>
-
-              <div v-if="searchResults.length > 0" class="search-results-overlay rounded-3 mt-2 shadow-2xl p-2">
-                <div v-for="track in searchResults" :key="track.id"
-                  class="result-item d-flex align-items-center p-2 rounded-3 mb-1"
-                  :class="{ 'playing': currentPlaying === track.id }">
-
-                  <!-- Play Button -->
-                  <div class="play-btn-wrapper me-2" @click.stop="togglePreview(track)">
-                    <i class="pi"
-                      :class="currentPlaying === track.id ? 'pi-pause-circle text-success' : 'pi-play-circle'"></i>
-                  </div>
-
-                  <!-- Track Info -->
-                  <div class="d-flex align-items-center flex-grow-1 pointer py-1 pe-2 overflow-hidden"
-                    @click="togglePreview(track)">
-                    <img :src="track.image" alt="cover" class="rounded-2 me-3"
-                      style="width: 40px; height: 40px; object-fit: cover;">
-
-                    <div class="flex-grow-1 overflow-hidden text-start">
-                      <p class="mb-0 fw-bold text-white text-truncate small">{{ track.name }}</p>
-                      <p class="mb-0 text-white-50 extra-small text-truncate">{{ track.artist }}</p>
+            <!-- Pre-defined Suggestions -->
+            <div v-if="!searchQuery" class="suggestions-area mb-4">
+              <h6 class="small fw-bold text-muted text-uppercase tracking-widest mb-3">Sugerencias Populares</h6>
+              <div class="suggestions-grid">
+                <div v-for="s in popularSuggestions" :key="s.id"
+                  class="suggestion-chip d-flex align-items-center p-2 rounded-pill mb-2 border hover-lift"
+                  @click="handleVote(s)">
+                  <div class="position-relative me-3" @click.stop="togglePreview(s)">
+                    <img :src="s.image" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;">
+                    <div v-if="s.preview" class="play-overlay-pill">
+                      <i class="pi" :class="currentPlaying === s.id ? 'pi-pause' : 'pi-play'"
+                        style="font-size: 0.6rem;"></i>
                     </div>
                   </div>
-
-                  <!-- Vote Button -->
-                  <Button icon="pi pi-plus" label="Votar"
-                    class="votar-btn-mini p-button-sm p-button-success p-button-outlined rounded-pill py-1 px-3"
-                    @click.stop="handleVote(track)" :disabled="userVotes.includes(track.id)" />
+                  <div class="flex-grow-1 overflow-hidden pe-3">
+                    <p class="mb-0 fw-bold extra-small text-truncate">{{ s.name }}</p>
+                  </div>
+                  <i class="pi pi-plus-circle text-primary opacity-75 pe-2"></i>
                 </div>
+              </div>
+            </div>
+
+            <!-- Search Results -->
+            <div v-if="searchResults.length > 0" class="search-results-list custom-scroll">
+              <div v-for="track in searchResults" :key="track.id"
+                class="music-search-result d-flex align-items-center p-3 mb-2 rounded-4 hover-highlight">
+                <div class="position-relative me-3" @click="togglePreview(track)">
+                  <img :src="track.image" class="rounded-3" style="width: 48px; height: 48px;">
+                  <div v-if="track.preview" class="play-overlay">
+                    <i class="pi" :class="currentPlaying === track.id ? 'pi-pause' : 'pi-play'"></i>
+                  </div>
+                </div>
+                <div class="flex-grow-1 overflow-hidden" @click="togglePreview(track)">
+                  <h6 class="mb-0 fw-bold text-truncate">{{ track.name }}</h6>
+                  <p class="mb-0 text-muted extra-small">{{ track.artist }}</p>
+                </div>
+                <Button icon="pi pi-plus" class="p-button-rounded p-button-text p-button-primary"
+                  @click.stop="handleVote(track)" :disabled="userVotes.includes(track.id) || userVotes.length >= 3" />
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Real-time Ranking -->
+        <!-- 2. Ranking View -->
         <div class="col-lg-5">
-          <div class="card ranking-card glass-card border-0 h-100 p-4 p-md-5">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-              <h3 class="fw-bold mb-0 text-premium">Top Ranking</h3>
-              <div class="live-indicator">
-                <span class="dot"></span> en vivo
-              </div>
+          <div class="ranking-card-premium p-4 p-md-5 rounded-5 shadow-sm bg-white border-light h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="fw-bold mb-0">Top de canciones mas votadas</h4>
+              <div class="live-pill">LIVE</div>
             </div>
 
-            <div v-if="topSongs.length > 0" class="ranking-list">
-              <div v-for="(song, index) in topSongs" :key="song.id"
-                class="ranking-item d-flex align-items-center mb-3 p-2 p-md-3 rounded-4"
-                :class="{ 'playing': currentPlaying === song.id }">
-
-                <div class="rank-num me-2 me-md-3 d-none d-sm-block">{{ index + 1 }}</div>
-
-                <div class="d-flex align-items-center flex-grow-1 pointer overflow-hidden" @click="togglePreview(song)">
-                  <!-- Play Button -->
-                  <div class="play-btn-wrapper me-3">
-                    <i class="pi"
-                      :class="currentPlaying === song.id ? 'pi-pause-circle text-success' : 'pi-play-circle'"></i>
+            <div class="ranking-list">
+              <transition-group name="list">
+                <div v-for="(song, idx) in topSongs" :key="song.id"
+                  class="ranking-item d-flex align-items-center p-3 rounded-4 mb-3 border-light shadow-xs position-relative overflow-hidden"
+                  @click="togglePreview(song)">
+                  <div class="rank-badge me-3">{{ idx + 1 }}</div>
+                  <div v-if="song.preview" class="play-overlay-static" :class="{ 'active': currentPlaying === song.id }"
+                    style="background-color: bisque; color: white; border-radius: 25px; margin-right: 5px;">
+                    <i class="pi" :class="currentPlaying === song.id ? 'pi-pause' : 'pi-play'"></i>
                   </div>
 
-                  <div class="position-relative me-3 flex-shrink-0">
-                    <img :src="song.image" alt="cover" class="rounded-3 shadow-sm"
-                      style="width: 48px; height: 48px; object-fit: cover;">
+                  <div class="position-relative me-3 overflow-hidden rounded-3">
+                    <img :src="song.image" style="width: 50px; height: 50px; object-fit: cover;">
+                  </div>
+                  <div class="flex-grow-1 overflow-hidden">
+                    <h6 class="mb-0 fw-bold text-truncate">{{ song.name }}</h6>
+                    <p class="mb-0 text-muted extra-small d-flex align-items-center gap-1">
+                      {{ song.artist }}
+                      <i v-if="song.votes > 5" class="pi pi-bolt text-warning fs-small" title="Trending!"></i>
+                    </p>
                   </div>
 
-                  <div class="flex-grow-1 overflow-hidden text-start">
-                    <p class="mb-0 fw-bold text-truncate" :class="currentPlaying === song.id ? 'text-success' : ''">{{
-                      song.name }}</p>
-                    <p class="mb-0 text-muted text-truncate" style="font-size: 0.75rem;">{{ song.artist }}</p>
+                  <div class="votos-count text-end">
+                    <span class="d-block fw-bold fs-5 text-primary">{{ song.votes }}</span>
+                    <span class="voto-label">VOTOS</span>
+                  </div>
+
+                  <div v-if="song.votes > 5" class="trending-fire">
+                    <i class="pi pi-fire"></i>
                   </div>
                 </div>
-
-                <div class="vote-count text-end ms-3 flex-shrink-0">
-                  <div class="fw-bold text-premium fs-5">{{ song.votes }}</div>
-                  <div class="text-muted" style="font-size: 0.55rem; letter-spacing: 1px;">VOTOS</div>
-                </div>
-              </div>
-            </div>
-
-            <div v-else class="text-center py-5">
-              <i class="pi pi-clock fs-1 text-muted opacity-25 mb-3"></i>
-              <p class="text-muted">Calculando ranking...</p>
+              </transition-group>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-.spotify-dark {
-  background: #121212;
-  color: white;
+.music-section {
+  background-color: var(--bg-music);
 }
 
-.bg-dark-soft {
-  background: #282828;
+.maxWidth-md {
+  max-width: 1600px;
 }
 
-.search-results-overlay {
+.search-input-wrapper {
+  background: #f8f9fa;
+  border-radius: 50px;
+}
+
+.search-icon {
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: #1e1e1e;
-  z-index: 1000;
-  max-height: 400px;
-  overflow-y: auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary-color);
+  z-index: 1;
 }
 
-.result-item:active,
-.result-item.playing {
-  background: rgba(29, 185, 84, 0.1);
+.premium-input {
+  background: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.3s ease;
 }
 
-.extra-small {
-  font-size: 0.7rem;
+.premium-input:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 10px 20px rgba(212, 163, 115, 0.1) !important;
 }
 
-.play-btn-wrapper {
-  font-size: 1.8rem;
-  color: #1DB954;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s;
+.search-spinner {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: -8px;
 }
 
-.play-btn-wrapper:active {
-  transform: scale(0.9);
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #eee;
+  border-radius: 50%;
 }
 
-.play-indicator {
-  display: none;
-  /* Removed from image */
+.dot.active {
+  background: var(--primary-color);
+  box-shadow: 0 0 8px var(--primary-color);
 }
 
-.votar-btn-mini {
-  font-size: 0.75rem !important;
-  font-weight: 700 !important;
-  transition: all 0.2s;
+.suggestion-chip {
+  cursor: pointer;
+  background: #fdfbf7;
+  transition: all 0.3s var(--transition-bounce);
 }
 
-.votar-btn-mini:not(:disabled):active {
+.suggestion-chip:active {
   transform: scale(0.95);
 }
 
-.ranking-item {
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid transparent;
-}
-
-.ranking-item.playing {
-  background: rgba(29, 185, 84, 0.08);
-  border-color: rgba(29, 185, 84, 0.2);
-}
-
-.quota-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #333;
-  transition: all 0.4s ease;
-}
-
-.quota-dot.active {
-  background: #1DB954;
-  box-shadow: 0 0 10px rgba(29, 185, 84, 0.5);
-}
-
-.rank-num {
-  font-family: var(--modern-font);
-  font-weight: 800;
-  font-size: 1.1rem;
-  color: var(--primary-color);
-  opacity: 0.5;
-  min-width: 24px;
-}
-
-.live-indicator {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #ef4444;
+.play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  color: white;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-.live-indicator .dot {
-  width: 6px;
-  height: 6px;
-  background: #ef4444;
+.music-search-result:hover .play-overlay {
+  opacity: 1;
+}
+
+.play-overlay-pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
   border-radius: 50%;
-  animation: blink 1s infinite;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-@keyframes blink {
+.suggestion-chip:hover .play-overlay-pill {
+  opacity: 1;
+}
+
+.live-pill {
+  background: #fee2e2;
+  color: #ef4444;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
   0% {
+    transform: scale(1);
     opacity: 1;
   }
 
   50% {
-    opacity: 0.3;
+    transform: scale(1.05);
+    opacity: 0.7;
   }
 
   100% {
+    transform: scale(1);
     opacity: 1;
   }
 }
 
-.pointer {
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+.rank-badge {
+  font-weight: 800;
+  color: var(--primary-color);
+  opacity: 0.4;
+  font-size: 1.2rem;
+  min-width: 25px;
 }
 
-/* Custom Scrollbar */
-.search-results-overlay::-webkit-scrollbar {
-  width: 6px;
+.voto-label {
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+  font-weight: 700;
+  color: var(--text-muted);
 }
 
-.search-results-overlay::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 10px;
+.trending-fire {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  color: #fbbf24;
+  font-size: 1.2rem;
+  transform: rotate(15deg);
+  opacity: 0.6;
+}
+
+.extra-small {
+  font-size: 0.75rem;
+}
+
+.fs-small {
+  font-size: 0.85rem;
 }
 
 @media (max-width: 768px) {
-
-  .music-card,
-  .ranking-card {
-    padding: 1.5rem !important;
-  }
-
-  .votar-btn-mini span {
-    display: none;
-  }
-
-  .votar-btn-mini {
-    padding: 0.5rem !important;
+  .music-section {
+    padding: 3rem 1rem;
   }
 }
 </style>

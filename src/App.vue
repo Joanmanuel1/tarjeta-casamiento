@@ -21,6 +21,17 @@ import GuestAdmin from './components/GuestAdmin.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const currentHash = ref(window.location.hash || '#inicio')
+
+// Handle hash-based routing
+const handleHashChange = () => {
+  currentHash.value = window.location.hash || '#inicio'
+  if (currentHash.value === '#admin') {
+    document.body.style.overflow = '' // Ensure scrolling for admin table
+    window.scrollTo(0, 0)
+  }
+}
+
 // Performance configuration
 ScrollTrigger.config({
   limitCallbacks: true,
@@ -82,6 +93,9 @@ onMounted(() => {
   window.addEventListener('load', () => {
     ScrollTrigger.refresh()
   })
+
+  // Listen to hash changes for routing
+  window.addEventListener('hashchange', handleHashChange)
 })
 </script>
 
@@ -90,89 +104,93 @@ onMounted(() => {
     <div class="scroll-progress-container">
       <div class="scroll-progress"></div>
     </div>
-    <AppNavbar />
+    <AppNavbar :is-admin="currentHash === '#admin'" />
 
     <main>
-      <HeroSection id="inicio" />
-      <CountdownTimer id="contador" />
-      <OurStory id="historia" class="section-reveal" />
+      <div v-if="currentHash !== '#admin'" class="landing-content">
+        <HeroSection id="inicio" />
+        <CountdownTimer id="contador" />
+        <OurStory id="historia" class="section-reveal" />
 
-      <!-- Civil -->
-      <section id="civil" class="events-section section-reveal py-5">
-        <div class="container-fluid px-4 px-md-5">
-          <div class="text-center mb-5">
-            <span class="section-tag">Ceremonia</span>
-            <h2 class="GreatVibes display-4">Civil</h2>
+        <!-- Civil -->
+        <section id="civil" class="events-section section-reveal py-5">
+          <div class="container-fluid px-4 px-md-5">
+            <div class="text-center mb-5">
+              <span class="section-tag">Ceremonia</span>
+              <h2 class="GreatVibes display-4">Civil</h2>
+            </div>
+            <CivilSection />
           </div>
-          <CivilSection />
-        </div>
-      </section>
+        </section>
 
-      <!-- Fiesta -->
-      <section id="fiesta" class="events-section section-reveal py-5 bg-light">
-        <div class="container-fluid px-4 px-md-5">
-          <div class="text-center mb-5">
-            <span class="section-tag">Celebración</span>
-            <h2 class="GreatVibes display-4">La Fiesta</h2>
+        <!-- Fiesta -->
+        <section id="fiesta" class="events-section section-reveal py-5 bg-light">
+          <div class="container-fluid px-4 px-md-5">
+            <div class="text-center mb-5">
+              <span class="section-tag">Celebración</span>
+              <h2 class="GreatVibes display-4">La Fiesta</h2>
+            </div>
+            <PartySection />
           </div>
-          <PartySection />
-        </div>
-      </section>
+        </section>
 
-      <!-- DressCode -->
-      <section id="dress-code" class="info-section section-reveal py-5">
-        <div class="container-fluid px-4 px-md-5">
-          <div class="text-center mb-5">
-            <span class="section-tag">Código de Vestimenta</span>
-            <h2 class="GreatVibes display-4">Dress Code</h2>
+        <!-- DressCode -->
+        <section id="dress-code" class="info-section section-reveal py-5">
+          <div class="container-fluid px-4 px-md-5">
+            <div class="text-center mb-5">
+              <span class="section-tag">Código de Vestimenta</span>
+              <h2 class="GreatVibes display-4">Dress Code</h2>
+              <p>Se reserva el color blanco.</p>
+            </div>
+            <DressCodeSection />
           </div>
-          <DressCodeSection />
-        </div>
-      </section>
+        </section>
 
-      <!-- Tips -->
-      <section id="tips" class="info-section section-reveal py-5 bg-light">
-        <div class="container-fluid px-4 px-md-5">
-          <div class="text-center mb-5">
-            <span class="section-tag">Tips para Invitados</span>
-            <h2 class="GreatVibes display-4">Tips & Notas</h2>
+        <!-- Tips -->
+        <section id="tips" class="info-section section-reveal py-5 bg-light">
+          <div class="container-fluid px-4 px-md-5">
+            <div class="text-center mb-5">
+              <span class="section-tag">Tips para Invitados</span>
+              <h2 class="GreatVibes display-4">Tips & Notas</h2>
+            </div>
+            <TipsSection />
           </div>
-          <TipsSection />
-        </div>
-      </section>
+        </section>
 
-      <MusicSection id="musica" class="section-reveal" />
-      <PhotoGallery id="galeria" class="section-reveal" />
-
-      <!-- Regalos -->
-      <section id="regalos" class="gifts-qr-section section-reveal py-5">
-        <div class="container-fluid px-4 px-md-5">
-          <div class="text-center mb-5">
-            <span class="section-tag">Un gesto de amor</span>
-            <h2 class="GreatVibes display-4">Regalos</h2>
+        <MusicSection id="musica" class="section-reveal" />
+        <!-- Regalos -->
+        <section id="regalos" class="gifts-qr-section section-reveal py-5">
+          <div class="container-fluid px-4 px-md-5">
+            <div class="text-center mb-5">
+              <span class="section-tag">Un gesto de amor</span>
+              <h2 class="GreatVibes display-4">Regalos</h2>
+            </div>
+            <GiftSection />
           </div>
-          <GiftSection />
-        </div>
-      </section>
+        </section>
 
-      <!-- QR/Fotos -->
-      <section id="fotos" class="gifts-qr-section section-reveal py-5 bg-light">
-        <div class="container-fluid px-4 px-md-5">
-          <div class="text-center mb-5">
-            <span class="section-tag">Galería de Fotos</span>
-            <h2 class="GreatVibes display-4">Fotos compartidas</h2>
+        <!-- QR/Fotos -->
+        <section id="fotos" class="gifts-qr-section section-reveal py-5 bg-light">
+          <div class="container-fluid px-4 px-md-5">
+            <div class="text-center mb-5">
+              <span class="section-tag">Galería de Fotos</span>
+              <h2 class="GreatVibes display-4">Fotos compartidas</h2>
+            </div>
+            <QRCodeSection />
           </div>
-          <QRCodeSection />
-        </div>
-      </section>
+        </section>
+        <PhotoGallery id="galeria" class="section-reveal" />
 
-      <RSVPForm id="rsvp" class="section-reveal" />
-      
-      <!-- ABM Invitados (Temporal) -->
-      <GuestAdmin id="admin-guests" />
+        <RSVPForm id="rsvp" class="section-reveal" />
+      </div>
+
+      <!-- Private Admin View -->
+      <div v-else class="admin-content animate-fade-in pt-5">
+        <GuestAdmin id="admin-guests" />
+      </div>
     </main>
 
-    <footer class="wedding-footer">
+    <footer v-if="currentHash !== '#admin'" class="wedding-footer">
       <div class="container text-center">
         <div class="footer-decoration mb-4">✦</div>
         <p class="GreatVibes footer-names">Joan & Stephie</p>

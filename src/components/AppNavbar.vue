@@ -1,16 +1,21 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 
+const props = defineProps({
+  isAdmin: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const isScrolled = ref(false)
-let ticking = false
+const ticking = false
 
 const handleScroll = () => {
   if (!ticking) {
     requestAnimationFrame(() => {
       isScrolled.value = window.scrollY > 50
-      ticking = false
     })
-    ticking = true
   }
 }
 
@@ -32,9 +37,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg fixed-top" :class="{ 'scrolled': isScrolled }">
+  <nav class="navbar navbar-expand-lg fixed-top" :class="{ 'scrolled': isScrolled || isAdmin }">
     <div class="container-fluid">
-      <a class="navbar-brand GreatVibes fs-2" href="#">
+      <a class="navbar-brand GreatVibes fs-2" :href="isAdmin ? '#admin' : '#'">
         J & S
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -44,19 +49,28 @@ onUnmounted(() => {
 
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav align-items-center">
-          <li class="nav-item"><a class="nav-link px-3" href="#inicio" @click="closeMenu">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link px-3" href="#contador" @click="closeMenu">Cuenta regresiva</a></li>
-          <li class="nav-item"><a class="nav-link px-3" href="#historia" @click="closeMenu">Historia</a></li>
-          <li class="nav-item"><a class="nav-link px-3" href="#civil" @click="closeMenu">Ceremonia Civil</a></li>
-          <li class="nav-item"><a class="nav-link px-3" href="#fiesta" @click="closeMenu">Fiesta</a></li>
-          <li class="nav-item"><a class="nav-link px-3" href="#galeria" @click="closeMenu">Galería</a></li>
-          <li class="nav-item"><a class="nav-link px-3" href="#regalos" @click="closeMenu">Regalos</a></li>
-          <li class="nav-item"><a class="nav-link px-3" href="#musica" @click="closeMenu">Música</a></li>
-          <li class="nav-item">
-            <a class="nav-link nav-cta px-4 py-2 rounded-pill" href="#rsvp" @click="closeMenu">
-              Confirmar
-            </a>
-          </li>
+          <template v-if="!isAdmin">
+            <li class="nav-item"><a class="nav-link px-3" href="#inicio" @click="closeMenu">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#contador" @click="closeMenu">Cuenta regresiva</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#historia" @click="closeMenu">Historia</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#civil" @click="closeMenu">Ceremonia Civil</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#fiesta" @click="closeMenu">Fiesta</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#regalos" @click="closeMenu">Regalos</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#musica" @click="closeMenu">Música</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#admin" @click="closeMenu">Invitados</a></li>
+            <li class="nav-item">
+              <a class="nav-link nav-cta px-4 py-2 rounded-pill ms-lg-3" href="#rsvp" @click="closeMenu">
+                Confirmar
+              </a>
+            </li>
+          </template>
+          <template v-else>
+            <li class="nav-item">
+              <a class="nav-link nav-cta px-4 py-2 rounded-pill" href="#" @click="closeMenu">
+                <i class="pi pi-arrow-left me-2"></i> Volver a la Invitación
+              </a>
+            </li>
+          </template>
         </ul>
       </div>
     </div>

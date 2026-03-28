@@ -3,71 +3,72 @@ import { onMounted, ref } from 'vue'
 import gsap from 'gsap'
 import storyImg from '../assets/1.jpeg'
 
-const storyImage = ref(null)
-const storyContent = ref(null)
+const storyRef = ref(null)
 
 onMounted(() => {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-  if (storyImage.value) {
-    gsap.from(storyImage.value, {
-      x: -40,
-      opacity: 0,
-      duration: 1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: storyImage.value,
-        start: 'top 85%',
-        once: true
-      }
-    })
-  }
-
-  if (storyContent.value) {
-    gsap.from(storyContent.value, {
-      x: 40,
-      opacity: 0,
-      duration: 1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: storyContent.value,
-        start: 'top 85%',
-        once: true
-      }
-    })
-  }
+  // Staggered reveal for blocks
+  gsap.from('.story-block', {
+    opacity: 0,
+    y: 30,
+    stagger: 0.3,
+    duration: 1,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '.story-container',
+      start: 'top 80%',
+      once: true
+    }
+  })
 })
 </script>
 
 <template>
-  <section class="our-story overflow-hidden">
+  <section class="story-section py-5 overflow-hidden bg-history">
     <div class="container py-lg-5">
-      <div class="row align-items-center g-5">
-        <div ref="storyImage" class="col-lg-6 story-image-col">
-          <div class="image-wrapper position-relative">
-            <div class="frame shadow-lg">
-              <img :src="storyImg" alt="Joan y Stephie — Nuestra Historia" class="img-fluid rounded-4" loading="lazy">
-            </div>
-            <div class="floating-badge p-4 bg-white rounded-4 shadow-lg d-none d-md-block">
-              <span class="GreatVibes fs-3 text-premium">Desde 2021</span>
+      <div class="text-center mb-5 story-block">
+        <h2 class="GreatVibes display-4">Nuestra historia de amor</h2>
+      </div>
+
+      <div class="row align-items-center g-5 story-container">
+        <!-- Image Side -->
+        <div class="col-lg-6 story-block">
+          <div class="story-image-frame position-relative p-2 bg-white shadow-2xl rounded-5">
+            <img :src="storyImg" alt="Joan y Stephie" class="img-fluid rounded-5 story-img" loading="lazy">
+            <div class="story-floating-years shadow-lg">
+              <span class="fs-4 fw-bold">6</span>
+              <span class="small opacity-75">Años Juntos</span>
             </div>
           </div>
         </div>
-        <div ref="storyContent" class="col-lg-6 story-content-col">
-          <div class="ps-lg-4">
-            <span class="section-tag">El comienzo de todo</span>
-            <h2 class="GreatVibes display-4 mb-4">Nuestra historia de amor</h2>
-            <div class="lead-text text-muted mb-4 fs-5 lh-lg">
-              Todo empezó con una lie a una foto de Lisa de instragram y una foto de una tarta de verdura. Desde aquella
-              primera charla, supimos que estábamos destinados a escribir este camino juntos.
-            </div>
-            <div class="text-muted mb-5 fs-6 lh-lg">
-              Han sido años de viajes, complicidad, risas y crecimiento mutuo. Hoy, con la misma ilusión de ese primer
-              día, decidimos dar el paso más importante y celebrar nuestro amor rodeados de las personas que más
-              queremos.
-            </div>
-            <div class="story-quote p-4 rounded-4 border-start border-4 bg-light shadow-sm">
-              <em>"El amor no se mira, se siente, y aún más cuando ella está junto a ti."</em>
+
+        <!-- Narrative Side -->
+        <div class="col-lg-6 story-block">
+          <div class="ps-lg-5">
+            <div class="narrative-content">
+              <p class="fs-5 lh-lg text-muted mb-4">
+                Dicen que las mejores historias empiezan de la manera más inesperada. La nuestra comenzó con un simple
+                <span class="text-highlight">"like"</span> a una foto de <strong>Lisa</strong> (nuestra gatita favorita)
+                y una foto de una <strong>tarta de verdura</strong>.
+              </p>
+
+              <p class="fs-6 lh-lg text-muted mb-4">
+                Parecía algo casual, pero en el fondo fue el inicio de algo eterno. Como el gato que encuentra su
+                rincón favorito en la casa, nosotros encontramos en el otro ese hogar donde siempre queremos volver.
+              </p>
+
+              <p class="fs-6 lh-lg text-muted mb-5">
+                Entre charlas nocturnas, viajes compartidos y el crecimiento que solo el amor verdadero permite,
+                descubrimos que la vida es mucho más rica cuando se comparte con alguien que entiende tus chistes,
+                tus sueños y, por supuesto, tu amor por las tartas (incluso las de verdura).
+              </p>
+
+              <div class="emotional-quote p-4 rounded-4 shadow-sm bg-white">
+                <i class="pi pi-quote-left text-primary opacity-25 mb-2 d-block fs-3"></i>
+                <p class="mb-0 fst-italic text-dark fw-medium">
+                  "Nos elegimos cada día, con la misma complicidad de aquel primer mensaje y el amor que crece en cada
+                  pequeño detalle de nuestra vida juntos."
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -77,67 +78,79 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.our-story {
-  background: white;
+.story-section {
+  background-color: var(--bg-history);
 }
 
-.border-start {
-  border-color: var(--primary-color) !important;
-}
-
-.image-wrapper {
-  padding: 20px;
-}
-
-.frame {
+.text-highlight {
+  color: var(--primary-color);
+  font-weight: 700;
   position: relative;
-  z-index: 1;
-  background: white;
-  padding: 12px;
-  border-radius: 1.5rem;
-  transform: rotate(-2deg);
-  transition: all 0.3s ease;
 }
 
-.frame:active {
-  transform: rotate(0deg) scale(0.98);
+.text-highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: var(--secondary-color);
+  z-index: -1;
+  opacity: 0.5;
 }
 
-@media (min-width: 768px) {
-  .frame {
-    transition: transform 0.6s var(--transition-bounce);
-  }
-  .frame:hover {
-    transform: rotate(0deg) scale(1.02);
-  }
+.story-image-frame {
+  transform: rotate(-3deg);
+  transition: all 0.5s var(--transition-bounce);
 }
 
-.floating-badge {
+.story-img {
+  filter: sepia(0.2) contrast(1.05);
+  transition: all 0.5s ease;
+}
+
+.story-floating-years {
   position: absolute;
   bottom: -20px;
-  right: 0;
-  z-index: 2;
-  border: 1px solid rgba(212, 163, 115, 0.2);
+  right: -10px;
+  background: white;
+  padding: 15px 25px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  border: 1px solid #f0f0f0;
 }
 
-.story-quote {
-  font-family: var(--modern-font);
-  color: var(--text-muted);
-  position: relative;
+.emotional-quote {
+  border-left: 4px solid var(--primary-color);
 }
 
 @media (max-width: 991px) {
-  .story-image-col {
-    order: 2;
+  .story-image-frame {
+    transform: rotate(0deg);
+    max-width: 400px;
+    margin: 0 auto;
   }
 
-  .story-content-col {
-    order: 1;
+  .story-section {
     text-align: center;
   }
 
-  .story-quote {
+  .emotional-quote {
     text-align: left;
+  }
+}
+
+@media (min-width: 992px) {
+  .story-image-frame:hover {
+    transform: rotate(0deg) scale(1.02);
+  }
+
+  .story-image-frame:hover .story-img {
+    filter: sepia(0);
   }
 }
 </style>
