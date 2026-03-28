@@ -240,8 +240,8 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
             </div>
           </div>
 
-          <!-- Sticky Submit Button -->
-          <div class="submit-wrap fixed-bottom p-4 bg-white border-top shadow-lg-up d-flex gap-3">
+          <!-- Sticky Submit Button (Hidden when searching on mobile) -->
+          <div v-if="!showResults" class="submit-wrap fixed-bottom p-4 bg-white border-top shadow-lg-up d-flex gap-3">
             <Button label="Cancelar" severity="secondary" class="w-50 py-3 rounded-pill border-0 o-75"
               @click="resetAll" />
             <Button :label="isSubmitting ? 'Enviando...' : 'Confirmar ❤️'" severity="success"
@@ -263,7 +263,7 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
 <style scoped>
 .rsvp-fluid-section {
   background-color: #fdfbf7;
-  min-height: 100vh;
+  min-height: 100dvh;
   transition: all 0.5s ease;
 }
 
@@ -279,11 +279,12 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   z-index: 9999;
   background-color: rgba(253, 251, 247, 0.98);
   padding-top: 5vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 /* Search UI */
