@@ -11,16 +11,6 @@ const days = ref(0)
 const hours = ref(0)
 const minutes = ref(0)
 const seconds = ref(0)
-const currentPhraseIndex = ref(0)
-const phrases = [
-  "Todo comenzó con un mensaje...",
-  "Luego vino la primera cita en un bar",
-  "Luego la segunda cita en la plaza",
-  "Nos pusimos de novios",
-  "Comenzamos a convivir",
-  "Y ahora nos vamos a casar",
-  "Falta muy poquito para el gran día ❤️"
-]
 
 // --- COMPUTED ---
 const progress = computed(() => {
@@ -54,20 +44,6 @@ const updateCountdown = () => {
   seconds.value = Math.floor((diff % (1000 * 60)) / 1000)
 }
 
-const cyclePhrases = () => {
-  gsap.to('.story-text', {
-    opacity: 0,
-    y: -10,
-    duration: 1,
-    onComplete: () => {
-      currentPhraseIndex.value = (currentPhraseIndex.value + 1) % phrases.length
-      gsap.fromTo('.story-text',
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 1.5, ease: 'power2.out' }
-      )
-    }
-  })
-}
 
 // --- PARTICLES ---
 const createParticle = () => {
@@ -99,15 +75,12 @@ const createParticle = () => {
   })
 }
 
-let countdownTimer, phraseTimer, particleTimer
+let countdownTimer, particleTimer
 onMounted(() => {
   updateCountdown()
   countdownTimer = setInterval(updateCountdown, 1000)
-  phraseTimer = setInterval(cyclePhrases, 6000)
   particleTimer = setInterval(createParticle, 2000)
-
-  // Initial animations
-  gsap.from('.countdown-visual-container', { opacity: 0, scale: 0.9, duration: 2, ease: 'power3.out' })
+  gsap.from('.stats-glass-container', { opacity: 0, scale: 0.9, duration: 2, ease: 'power3.out' })
 })
 
 onUnmounted(() => {
@@ -118,54 +91,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="countdown-experience py-5 overflow-hidden position-relative" :class="timeOfDayColor">
+  <section class="countdown-experience py-1 overflow-hidden position-relative" :class="timeOfDayColor">
     <div class="particles-container"></div>
-
-    <div class="container py-5 text-center position-relative z-1">
-      <!-- Storytelling Header -->
-      <div class="mb-5">
-        <h2 class="story-text GreatVibes display-4 text-white drop-shadow">
-          {{ phrases[currentPhraseIndex] }}
-        </h2>
-      </div>
-
-      <!-- Visual Journey Path -->
-      <div class="countdown-visual-container mx-auto mb-2">
-        <div class="journey-path-wrapper mx-auto position-relative">
-          <svg viewBox="0 0 400 100" class="journey-svg w-100 h-100">
-            <!-- Background Line -->
-            <path d="M 40 50 L 360 50" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"
-              stroke-dasharray="4 4" />
-
-            <!-- Progress Line -->
-            <path id="journeyPath" d="M 40 50 L 360 50" fill="none" stroke="white" stroke-width="3"
-              stroke-dasharray="320" :stroke-dashoffset="320 - (3.2 * progress)"
-              style="transition: stroke-dashoffset 2s ease-out;" />
-
-            <!-- Start Icon -->
-            <foreignObject x="25" y="35" width="30" height="30">
-              <i class="pi pi-heart-fill text-white fs-4"></i>
-            </foreignObject>
-
-            <!-- End Icon -->
-            <g class="target-point">
-              <foreignObject x="345" y="35" width="30" height="30">
-                <i class="pi pi-heart-fill text-white fs-4 target-heart"></i>
-              </foreignObject>
-              <circle cx="360" cy="50" r="15" fill="none" stroke="white" stroke-width="1" class="pulse-circle" />
-            </g>
-
-            <!-- Moving Pointer (Star) -->
-            <g :style="{ transform: `translateX(${3.2 * progress}px)` }" class="traveler-pointer">
-              <foreignObject x="25" y="35" width="30" height="30">
-                <i class="pi pi-star-fill text-warning fs-5"></i>
-              </foreignObject>
-            </g>
-          </svg>
-        </div>
-      </div>
-
-      <!-- Time Stats -->
+    <div class="container py-1 text-center position-relative z-1">
       <div class="stats-glass-container glass-premium p-4 rounded-5 mx-auto maxWidth-md">
         <div class="row g-2 g-md-4">
           <div class="col-3">
@@ -178,17 +106,13 @@ onUnmounted(() => {
           </div>
           <div class="col-3 border-start border-white-50">
             <span class="d-block display-6 fw-bold text-white">{{ minutes }}</span>
-            <span class="small text-uppercase tracking-widest text-white">Minutos</span>
+            <span class="small text-uppercase tracking-widest text-white">Min</span>
           </div>
           <div class="col-3 border-start border-white-50">
             <span class="d-block display-6 fw-bold text-white">{{ seconds }}</span>
-            <span class="small text-uppercase tracking-widest text-white">Segundos</span>
+            <span class="small text-uppercase tracking-widest text-white">Seg</span>
           </div>
         </div>
-      </div>
-
-      <div class="mt-4 text-white small tracking-widest text-uppercase">
-        El viaje hacia nuestro "Sí, acepto"
       </div>
     </div>
   </section>
@@ -196,7 +120,6 @@ onUnmounted(() => {
 
 <style scoped>
 .countdown-experience {
-  min-height: 500px;
   transition: background 3s ease;
 }
 

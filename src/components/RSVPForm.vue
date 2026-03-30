@@ -29,6 +29,25 @@ watch(selectedGuests, (newVal) => {
 
 // --- Search Logic ---
 let searchTimeout = null
+
+const updateFilteredResults = () => {
+  if (!searchQuery.value || searchQuery.value.trim().length < 1) {
+    filteredResults.value = []
+    return
+  }
+  const term = searchQuery.value.toLowerCase().trim()
+
+  filteredResults.value = allGuests.value.filter(g => {
+    const fullName = `${g.nombre} ${g.apellido}`.toLowerCase()
+    const matches = fullName.includes(term) ||
+      g.nombre.toLowerCase().includes(term) ||
+      g.apellido.toLowerCase().includes(term)
+
+    const isAlreadyInSelection = selectedGuests.value.some(sg => sg.id === g.id)
+    return matches && !isAlreadyInSelection
+  }).slice(0, 15)
+}
+
 watch(searchQuery, (newVal) => {
   if (searchTimeout) clearTimeout(searchTimeout)
 
@@ -42,17 +61,7 @@ watch(searchQuery, (newVal) => {
   isSearching.value = true
   showResults.value = true
   searchTimeout = setTimeout(() => {
-    const term = newVal.toLowerCase().trim()
-
-    filteredResults.value = allGuests.value.filter(g => {
-      const fullName = `${g.nombre} ${g.apellido}`.toLowerCase()
-      const matches = fullName.includes(term) ||
-        g.nombre.toLowerCase().includes(term) ||
-        g.apellido.toLowerCase().includes(term)
-
-      const isAlreadyInSelection = selectedGuests.value.some(sg => sg.id === g.id)
-      return matches && !isAlreadyInSelection
-    }).slice(0, 15)
+    updateFilteredResults()
 
     isSearching.value = false
 
@@ -88,10 +97,11 @@ const toggleGuestSelection = (guest) => {
       comments: guest.comentario || '',
       isEditing: guest.estado === 'confirmado'
     })
-    showResults.value = false // Hide dropdown but keep query string
+    showResults.value = false // Cerrar el desplegable, pero sin vaciar la búsqueda
   } else {
     selectedGuests.value.splice(index, 1)
   }
+  updateFilteredResults()
 }
 
 const submitAll = async () => {
@@ -187,7 +197,7 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
           <div class="search-pill-premium d-flex align-items-center p-2 rounded-pill shadow-sm border bg-white">
             <i class="pi pi-search ms-3 me-2 text-primary opacity-50"></i>
             <InputText v-model="searchQuery" placeholder="Escribí tu nombre o apellido"
-              class="flex-grow-1 premium-input-field py-2" autofocus @focus="showResults = true" />
+              class="flex-grow-1 premium-input-field py-2" autofocus @focus="showResults = true; updateFilteredResults()" />
             <Button v-if="searchQuery" icon="pi pi-times" class="p-button-text p-button-rounded p-button-sm me-2"
               @click="searchQuery = ''; showResults = false" />
           </div>
