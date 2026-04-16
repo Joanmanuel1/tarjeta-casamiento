@@ -49,12 +49,12 @@ onUnmounted(() => {
 <style scoped>
 .back-to-top {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  right: 1rem;
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(212, 163, 115, 0.8);
+  background: rgba(212, 163, 115, 0.85);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: white;
@@ -66,6 +66,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  touch-action: manipulation;
 }
 
 .back-to-top:hover {
@@ -74,8 +75,20 @@ onUnmounted(() => {
   box-shadow: 0 12px 40px rgba(212, 163, 115, 0.4);
 }
 
+.back-to-top:active {
+  transform: scale(0.9) !important;
+  background: var(--primary-dark);
+}
+
 .back-to-top i {
   font-size: 1.2rem;
   font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .back-to-top {
+    bottom: 30px;
+    right: 30px;
+  }
 }
 </style>

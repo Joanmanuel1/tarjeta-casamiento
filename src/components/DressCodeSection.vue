@@ -1,5 +1,9 @@
 <script setup>
-// Props for consistency if needed, though they are currently static
+import mensDressWebp from '../assets/mens_dress.webp'
+import mensDressPng from '../assets/mens_dress.png'
+import womensDressWebp from '../assets/womens_dress.webp'
+import womensDressPng from '../assets/womens_dress.png'
+
 const dressCodeMessage = "Elegante pero cómodo 😎"
 const danceMessage = "Queremos que te veas increíble... ¡y que bailes toda la noche! 💃🕺✨"
 </script>
@@ -16,8 +20,11 @@ const danceMessage = "Queremos que te veas increíble... ¡y que bailes toda la 
       <div class="col-md-6 col-lg-5 col-xl-4 section-reveal">
         <div class="outfit-card p-4 rounded-5 shadow-lg h-100 hover-glow scheme-men">
           <div class="outfit-image-wrapper mb-4 overflow-hidden rounded-4 shadow-sm">
-            <img src="../assets/mens_dress.png" alt="Dress Code Hombres" class="w-100 object-fit-cover"
-              style="height: 350px;">
+            <picture>
+              <source :srcset="mensDressWebp" type="image/webp" />
+              <img :src="mensDressPng" alt="Dress Code Hombres" class="w-100 object-fit-cover"
+                loading="lazy" decoding="async" style="aspect-ratio: 3/4; width: 100%;">
+            </picture>
           </div>
 
           <div class="text-center">
@@ -49,8 +56,11 @@ const danceMessage = "Queremos que te veas increíble... ¡y que bailes toda la 
       <div class="col-md-6 col-lg-5 col-xl-4 section-reveal">
         <div class="outfit-card p-4 rounded-5 shadow-lg h-100 hover-glow scheme-women">
           <div class="outfit-image-wrapper mb-4 overflow-hidden rounded-4 shadow-sm">
-            <img src="../assets/womens_dress.png" alt="Dress Code Mujeres" class="w-100 object-fit-cover"
-              style="height: 350px;">
+            <picture>
+              <source :srcset="womensDressWebp" type="image/webp" />
+              <img :src="womensDressPng" alt="Dress Code Mujeres" class="w-100 object-fit-cover"
+                loading="lazy" decoding="async" style="aspect-ratio: 3/4; width: 100%;">
+            </picture>
           </div>
 
           <div class="text-center">
@@ -167,6 +177,25 @@ const danceMessage = "Queremos que te veas increíble... ¡y que bailes toda la 
 @media (max-width: 767px) {
   .outfit-card:active {
     transform: scale(0.98);
+  }
+
+  .dress-code-wrapper {
+    padding-top: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .outfit-badge {
+    font-size: 1.3rem;
+  }
+
+  .dance-message-bubble {
+    border-radius: 1.25rem !important;
+    padding: 1rem 1.25rem !important;
+  }
+
+  .dance-text {
+    font-size: 0.95rem;
   }
 }
 </style>

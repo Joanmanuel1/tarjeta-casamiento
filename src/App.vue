@@ -1,33 +1,50 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, defineAsyncComponent } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
+// ── Todos los componentes: carga inmediata ────────────────────────────
+// (necesario para que ScrollTrigger.batch encuentre .section-reveal en el DOM)
 import AppNavbar from './components/AppNavbar.vue'
 import HeroSection from './components/HeroSection.vue'
+import IntroScreen from './components/IntroScreen.vue'
+import CustomCursor from './components/CustomCursor.vue'
+import BackToTop from './components/BackToTop.vue'
+import AmbientSound from './components/AmbientSound.vue'
 import CountdownTimer from './components/CountdownTimer.vue'
 import OurStory from './components/OurStory.vue'
 import CivilSection from './components/CivilSection.vue'
 import PartySection from './components/PartySection.vue'
-import PhotoGallery from './components/PhotoGallery.vue'
-import GiftSection from './components/GiftSection.vue'
-import QRCodeSection from './components/QRCodeSection.vue'
-import RSVPForm from './components/RSVPForm.vue'
-import BackToTop from './components/BackToTop.vue'
 import DressCodeSection from './components/DressCodeSection.vue'
 import TipsSection from './components/TipsSection.vue'
+import DayTimeline from './components/DayTimeline.vue'
 import MusicSection from './components/MusicSection.vue'
-import GuestAdmin from './components/GuestAdmin.vue'
+import GiftSection from './components/GiftSection.vue'
+import QRCodeSection from './components/QRCodeSection.vue'
+import PhotoGallery from './components/PhotoGallery.vue'
+import WishWall from './components/WishWall.vue'
+import RSVPForm from './components/RSVPForm.vue'
+
+// ── Admin: lazy (solo se carga al navegar a #admin) ───────────────────
+const GuestAdmin = defineAsyncComponent(() => import('./components/GuestAdmin.vue'))
 
 gsap.registerPlugin(ScrollTrigger)
 
 const currentHash = ref(window.location.hash || '#inicio')
+const introFinished = ref(false)
 
 // Handle hash-based routing
 const handleHashChange = () => {
   currentHash.value = window.location.hash || '#inicio'
   if (currentHash.value === '#admin') {
     document.body.style.overflow = '' // Ensure scrolling for admin table
+    window.scrollTo(0, 0)
+  }
+}
+
+const onIntroDone = () => {
+  introFinished.value = true
+  if (currentHash.value !== '#admin') {
     window.scrollTo(0, 0)
   }
 }
@@ -101,6 +118,12 @@ onMounted(() => {
 
 <template>
   <div class="wedding-website">
+    <!-- Intro cinematográfica (solo primera visita) -->
+    <IntroScreen v-if="!introFinished" @done="onIntroDone" />
+
+    <!-- Cursor personalizado (desktop only) -->
+    <CustomCursor />
+
     <div class="scroll-progress-container">
       <div class="scroll-progress"></div>
     </div>
@@ -108,9 +131,32 @@ onMounted(() => {
 
     <main>
       <div v-if="currentHash !== '#admin'" class="landing-content">
-        <HeroSection id="inicio" />
+        <HeroSection id="inicio" :active="introFinished" />
+
+        <!-- Divider: Hero → Countdown -->
+        <div class="section-divider divider-dark-to-cream" aria-hidden="true">
+          <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,40 C360,80 1080,0 1440,40 L1440,60 L0,60 Z" fill="var(--bg-cream)" />
+          </svg>
+        </div>
+
         <CountdownTimer id="contador" />
+
+        <!-- Divider decorativo con motivo floral (texto) -->
+        <div class="section-divider-ornament" aria-hidden="true">
+          <span class="ornament-line"></span>
+          <span class="ornament-glyph">✦</span>
+          <span class="ornament-line"></span>
+        </div>
+
         <OurStory id="historia" class="section-reveal" />
+
+        <!-- Divider: Historia → Civil -->
+        <div class="section-divider divider-cream-to-white" aria-hidden="true">
+          <svg viewBox="0 0 1440 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,25 C480,55 960,-5 1440,25 L1440,50 L0,50 Z" fill="white" />
+          </svg>
+        </div>
 
         <!-- Civil -->
         <section id="civil" class="events-section section-reveal py-5">
@@ -133,6 +179,16 @@ onMounted(() => {
             <PartySection />
           </div>
         </section>
+
+        <!-- Timeline del día -->
+        <DayTimeline id="timeline" class="section-reveal" />
+
+        <!-- Divider: Events → DressCode -->
+        <div class="section-divider divider-light-to-cream" aria-hidden="true">
+          <svg viewBox="0 0 1440 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 C360,50 1080,0 1440,35 L1440,50 L0,50 Z" fill="var(--bg-light)" />
+          </svg>
+        </div>
 
         <!-- DressCode -->
         <section id="dress-code" class="info-section section-reveal py-5">
@@ -158,6 +214,7 @@ onMounted(() => {
         </section>
 
         <MusicSection id="musica" class="section-reveal" />
+
         <!-- Regalos -->
         <section id="regalos" class="gifts-qr-section section-reveal py-5">
           <div class="container-fluid px-4 px-md-5">
@@ -180,6 +237,9 @@ onMounted(() => {
           </div>
         </section>
         <PhotoGallery id="galeria" class="section-reveal" />
+
+        <!-- Muro de Deseos -->
+        <WishWall id="deseos" class="section-reveal" />
 
         <RSVPForm id="rsvp" class="section-reveal" />
       </div>
@@ -206,10 +266,50 @@ onMounted(() => {
     </footer>
 
     <BackToTop />
+
+    <!-- Botón de música ambiental -->
+    <AmbientSound v-if="currentHash !== '#admin'" />
+
   </div>
 </template>
 
 <style>
+/* ===========================
+   SELF-HOSTED FONTS
+   =========================== */
+@font-face {
+  font-family: 'Great Vibes';
+  src: url('/fonts/GreatVibes-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Montserrat latin-ext (á, é, ñ, etc.) */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-latin-ext.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Montserrat latin básico */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* ===========================
    DESIGN TOKENS
    =========================== */
@@ -549,8 +649,87 @@ section {
 }
 
 /* ===========================
+   CUSTOM CURSOR
+   =========================== */
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
+}
+
+/* ===========================
+   SECTION DIVIDERS
+   =========================== */
+.section-divider {
+  position: relative;
+  line-height: 0;
+  overflow: hidden;
+  margin-top: -1px; /* evitar gaps de subpíxel */
+}
+
+.section-divider svg {
+  display: block;
+  width: 100%;
+  height: clamp(30px, 5vw, 60px);
+}
+
+/* Variantes de color — el SVG fill coincide con la sección destino */
+.divider-dark-to-cream { background: #111; }   /* debajo del hero oscuro */
+.divider-cream-to-white { background: var(--bg-cream); }
+.divider-light-to-cream { background: white; }
+
+/* Ornamento decorativo entre secciones */
+.section-divider-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 2rem 0;
+}
+
+.ornament-line {
+  display: block;
+  flex: 1;
+  max-width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+}
+
+.ornament-glyph {
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* ===========================
    GLOBAL MOBILE TOUCH HELPERS
    =========================== */
+
+/* Prevenir zoom en iOS al hacer focus en inputs */
+input, textarea, select {
+  font-size: 16px !important;
+}
+
+/* overscroll natural */
+body {
+  overscroll-behavior-y: none;
+}
+
+/* Safe areas (notch, home indicator) */
+:root {
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+/* Tap highlight personalizado */
+* {
+  -webkit-tap-highlight-color: rgba(212, 163, 115, 0.12);
+}
+
+/* Momentum scroll en iOS para contenedores con overflow */
+.custom-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
 
 /* All interactive elements: minimum touch target */
 @media (max-width: 767px) {
@@ -568,24 +747,27 @@ section {
   .event-card:hover,
   .info-card:hover,
   .counter-card:hover,
-  .detail-item:hover {
+  .detail-item:hover,
+  .hover-lift:hover,
+  .glass-card:hover {
     transform: none !important;
     box-shadow: var(--premium-shadow) !important;
   }
 
-  /* Active states for touch */
+  /* Active states para touch feedback */
   .event-card:active,
-  .info-card:active {
+  .info-card:active,
+  .hover-lift:active {
     transform: scale(0.98) !important;
   }
 
   /* Reduce display-4 size for mobile */
   .display-4 {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
 
   .display-5 {
-    font-size: 1.8rem;
+    font-size: 1.65rem;
   }
 
   /* Section tag slightly smaller on mobile */
@@ -600,5 +782,6 @@ section {
   .gifts-qr-section .text-center.mb-5 {
     margin-bottom: 1.5rem !important;
   }
+
 }
 </style>

@@ -6,6 +6,7 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { getGuests } from '../services/guestService'
 import { updateMultipleRSVPs } from '../services/rsvpService'
+import AddToCalendar from './AddToCalendar.vue'
 
 // --- State ---
 const currentStep = ref(1) // 1: Main Flow, 3: Success (Step 2 merged into 1)
@@ -88,12 +89,29 @@ onMounted(async () => {
   }
 })
 
+const MENU_OPTIONS = [
+  { value: 'Normal',      label: 'Sin restricciones',      emoji: '🍽️' },
+  { value: 'Vegetariano', label: 'Vegetariano', emoji: '🥗' },
+  { value: 'Vegano',      label: 'Vegano',      emoji: '🌱' },
+  { value: 'Celíaco',     label: 'Celíaco',     emoji: '🌾' },
+  { value: 'Otro',        label: 'Otro',        emoji: '🍴' },
+]
+
+const buildComments = (g) => {
+  if (g.attendance !== 'Sí, asistiré') return ''
+  let c = g.menuOption || 'Normal'
+  if (g.allergies?.trim()) c += ` | Alergias: ${g.allergies.trim()}`
+  return c
+}
+
 const toggleGuestSelection = (guest) => {
   const index = selectedGuests.value.findIndex(g => g.id === guest.id)
   if (index === -1) {
     selectedGuests.value.push({
       ...guest,
       attendance: guest.asistencia === 'No podré asistir' ? 'No podré asistir' : 'Sí, asistiré',
+      menuOption: 'Normal',
+      allergies: '',
       comments: guest.comentario || '',
       isEditing: guest.estado === 'confirmado'
     })
@@ -110,7 +128,7 @@ const submitAll = async () => {
     const payloads = selectedGuests.value.map(g => ({
       id: g.id,
       attendance: g.attendance,
-      comments: g.comments
+      comments: buildComments(g)
     }))
 
     await updateMultipleRSVPs(payloads)
@@ -162,13 +180,37 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
           Nos hace muy felices saber que nos acompañarán. <br>
           ¡Prepárense para bailar!
         </p>
-        <div class="family-signature mb-5">
+        <div class="family-signature mb-4">
           <p class="mb-1 text-premium fw-bold tracking-widest">Joan & Stephie</p>
           <div class="signature-line mx-auto"></div>
         </div>
+
+        <!-- Agendar al calendario -->
+        <div class="mb-4">
+          <AddToCalendar which="both" variant="solid" />
+        </div>
+
         <button @click="resetAll" class="btn btn-outline-secondary rounded-pill px-4 py-2 border-0 opacity-50">
           <i class="pi pi-refresh me-2"></i> Confirmar a alguien más
         </button>
+      </div>
+
+      <!-- SKELETON: mientras carga la lista de invitados -->
+      <div v-else-if="isLoading" class="skeleton-view py-5">
+        <div class="text-center mb-5">
+          <div class="sk-line sk-title mx-auto mb-3"></div>
+          <div class="sk-line sk-subtitle mx-auto"></div>
+        </div>
+        <div class="sk-searchbar mb-4"></div>
+        <div class="d-flex flex-column gap-3">
+          <div v-for="i in 5" :key="i" class="sk-guest-row d-flex align-items-center gap-3 p-3 rounded-4">
+            <div class="sk-avatar"></div>
+            <div class="flex-grow-1">
+              <div class="sk-line sk-name mb-2"></div>
+              <div class="sk-line sk-status"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- MAIN FLOW: SEARCH & CONFIRM -->
@@ -197,7 +239,7 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
           <div class="search-pill-premium d-flex align-items-center p-2 rounded-pill shadow-sm border bg-white">
             <i class="pi pi-search ms-3 me-2 text-primary opacity-50"></i>
             <InputText v-model="searchQuery" placeholder="Escribí tu nombre o apellido"
-              class="flex-grow-1 premium-input-field py-2" autofocus @focus="showResults = true; updateFilteredResults()" />
+              class="flex-grow-1 premium-input-field py-2" @focus="showResults = true; updateFilteredResults()" />
             <Button v-if="searchQuery" icon="pi pi-times" class="p-button-text p-button-rounded p-button-sm me-2"
               @click="searchQuery = ''; showResults = false" />
           </div>
@@ -255,8 +297,28 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
               </div>
 
               <div v-if="guest.attendance === 'Sí, asistiré'" class="mt-3">
-                <InputText v-model="guest.comments" placeholder="¿Dieta especial? (Celíaco, etc.)"
-                  class="w-100 p-2 rounded-pill bg-light border-0 small px-3" style="color: black;" />
+                <!-- Chips de menú -->
+                <p class="extra-small text-muted fw-bold text-uppercase mb-2" style="letter-spacing:.1em">Menú</p>
+                <div class="menu-chips d-flex gap-2 flex-wrap mb-3">
+                  <button
+                    v-for="opt in MENU_OPTIONS"
+                    :key="opt.value"
+                    type="button"
+                    class="menu-chip"
+                    :class="{ active: guest.menuOption === opt.value }"
+                    @click="guest.menuOption = opt.value"
+                  >
+                    <span class="me-1">{{ opt.emoji }}</span>{{ opt.label }}
+                  </button>
+                </div>
+
+                <!-- Campo de alergias -->
+                <InputText
+                  v-model="guest.allergies"
+                  placeholder="Alergias o restricciones (opcional)"
+                  class="w-100 p-2 rounded-pill bg-light border-0 small px-3"
+                  style="color: black;"
+                />
               </div>
             </div>
           </div>
@@ -494,6 +556,73 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
 .extra-small {
   font-size: 0.7rem;
 }
+
+/* ── Menu Chips ──────────────────────────────── */
+.menu-chips {
+  gap: 0.4rem !important;
+}
+
+.menu-chip {
+  background: #f5f5f5;
+  border: 1.5px solid #efefef;
+  border-radius: 2rem;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+  line-height: 1.6;
+}
+
+.menu-chip:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-dark);
+}
+
+.menu-chip.active {
+  background: var(--secondary-color);
+  border-color: var(--primary-color);
+  color: var(--primary-dark);
+  transform: scale(1.04);
+}
+
+/* ── Skeleton screens ───────────────────────── */
+@keyframes sk-shimmer {
+  0%   { background-position: -400px 0 }
+  100% { background-position: 400px 0 }
+}
+
+.sk-line,
+.sk-searchbar,
+.sk-avatar,
+.sk-guest-row {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 800px 100%;
+  animation: sk-shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.sk-title   { width: 220px; height: 40px; border-radius: 4px; }
+.sk-subtitle{ width: 160px; height: 16px; border-radius: 4px; }
+.sk-searchbar { height: 52px; border-radius: 2rem; }
+
+.sk-guest-row {
+  background: white;
+  animation: none; /* el shimmer va en los elementos internos */
+  border: 1px solid #f0f0f0;
+}
+
+.sk-avatar {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+  border-radius: 14px;
+}
+
+.sk-name   { width: 60%; height: 14px; }
+.sk-status { width: 30%; height: 11px; border-radius: 4px; }
 
 /* Mobile Tweaks */
 @media (max-width: 768px) {

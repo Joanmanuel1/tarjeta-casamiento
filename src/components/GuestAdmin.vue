@@ -11,8 +11,12 @@ import Toast from 'primevue/toast'
 import Select from 'primevue/select'
 import { FilterMatchMode } from '@primevue/core/api'
 import { getGuests, addGuest, updateGuest, deleteGuest } from '../services/guestService'
+import { getWishes } from '../services/wishService'
 
 const guests = ref([])
+const wishes = ref([])
+const wishesLoading = ref(false)
+const showWishes = ref(false)
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS }
 })
@@ -104,6 +108,25 @@ const formatDate = (timestamp) => {
   const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
   return date.toLocaleString()
 }
+
+const toggleWishes = async () => {
+  showWishes.value = !showWishes.value
+  if (showWishes.value && wishes.value.length === 0) {
+    wishesLoading.value = true
+    try {
+      wishes.value = await getWishes()
+    } catch {
+      toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los deseos', life: 3000 })
+    } finally {
+      wishesLoading.value = false
+    }
+  }
+}
+
+const formatWishDate = (ts) => {
+  if (!ts?.toDate) return ''
+  return ts.toDate().toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })
+}
 </script>
 
 <template>
@@ -154,6 +177,51 @@ const formatDate = (timestamp) => {
             </template>
           </Column>
         </DataTable>
+      </div>
+    </div>
+
+    <!-- Sección Muro de Deseos -->
+    <div class="container mt-4">
+      <div class="card border-0 shadow-sm bg-white">
+        <div
+          class="card-header bg-white border-0 d-flex justify-content-between align-items-center p-4"
+          style="cursor:pointer"
+          @click="toggleWishes"
+        >
+          <div>
+            <h5 class="fw-bold mb-0">💌 Muro de Deseos</h5>
+            <p class="text-muted small mb-0">Mensajes que dejaron los invitados</p>
+          </div>
+          <i :class="`pi ${showWishes ? 'pi-chevron-up' : 'pi-chevron-down'} text-muted`"></i>
+        </div>
+
+        <div v-if="showWishes" class="card-body pt-0 px-4 pb-4">
+          <div v-if="wishesLoading" class="text-center py-4 text-muted small">
+            <i class="pi pi-spinner pi-spin me-2"></i> Cargando deseos…
+          </div>
+          <div v-else-if="wishes.length === 0" class="text-center py-4 text-muted small">
+            Aún no hay deseos enviados.
+          </div>
+          <div v-else class="wishes-admin-list">
+            <div
+              v-for="w in wishes"
+              :key="w.id"
+              class="wish-row d-flex gap-3 align-items-start py-3 border-bottom"
+            >
+              <div class="wish-avatar-sm">{{ w.nombre?.charAt(0)?.toUpperCase() }}</div>
+              <div class="flex-grow-1 min-width-0">
+                <p class="fw-bold small mb-1">{{ w.nombre }}</p>
+                <p class="text-muted small mb-0" style="line-height:1.5">"{{ w.mensaje }}"</p>
+              </div>
+              <span class="text-muted" style="font-size:.72rem;white-space:nowrap;padding-top:2px">
+                {{ formatWishDate(w.creadoEn) }}
+              </span>
+            </div>
+          </div>
+          <p v-if="wishes.length" class="text-muted text-end mt-3 mb-0" style="font-size:.75rem">
+            {{ wishes.length }} deseo{{ wishes.length !== 1 ? 's' : '' }} en total
+          </p>
+        </div>
       </div>
     </div>
 
@@ -283,6 +351,22 @@ const formatDate = (timestamp) => {
 .premium-table :deep(.p-datatable-tbody > tr:hover) {
   background: #f8fafc;
 }
+
+.wish-avatar-sm {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  background: var(--secondary-color);
+  color: var(--primary-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.8rem;
+}
+
+.wish-row:last-child { border-bottom: none !important; }
 
 @media (max-width: 768px) {
   .search-wrapper {

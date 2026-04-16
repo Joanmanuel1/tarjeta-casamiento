@@ -185,6 +185,19 @@ onUnmounted(() => {
               <div class="live-pill">LIVE</div>
             </div>
 
+            <!-- Skeleton: mientras no llegaron canciones de Firestore -->
+            <div v-if="topSongs.length === 0" class="ranking-skeleton">
+              <div v-for="i in 5" :key="i" class="sk-song-row d-flex align-items-center gap-3 p-3 mb-3 rounded-4">
+                <div class="sk-rank-badge"></div>
+                <div class="sk-thumb"></div>
+                <div class="flex-grow-1">
+                  <div class="sk-bar sk-bar--title mb-2"></div>
+                  <div class="sk-bar sk-bar--artist"></div>
+                </div>
+                <div class="sk-votes"></div>
+              </div>
+            </div>
+
             <div class="ranking-list">
               <transition-group name="list">
                 <div v-for="(song, idx) in topSongs" :key="song.id"
@@ -309,6 +322,14 @@ onUnmounted(() => {
   opacity: 1;
 }
 
+/* En touch siempre visible */
+@media (pointer: coarse) {
+  .play-overlay {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.3);
+  }
+}
+
 .play-overlay-pill {
   position: absolute;
   top: 0;
@@ -327,6 +348,14 @@ onUnmounted(() => {
 
 .suggestion-chip:hover .play-overlay-pill {
   opacity: 1;
+}
+
+/* En touch siempre visible */
+@media (pointer: coarse) {
+  .play-overlay-pill {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.3);
+  }
 }
 
 .live-pill {
@@ -391,7 +420,70 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   .music-section {
-    padding: 3rem 1rem;
+    padding: 3rem 0.75rem;
+  }
+
+  .music-card-premium,
+  .ranking-card-premium {
+    padding: 1.25rem !important;
+    border-radius: 1.25rem !important;
+  }
+
+  /* Touch targets más grandes para resultados */
+  .music-search-result {
+    padding: 0.85rem 0.75rem !important;
+    min-height: 64px;
+  }
+
+  .suggestion-chip {
+    min-height: 52px;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  /* Ranking items más espaciados */
+  .ranking-item {
+    padding: 0.85rem 0.75rem !important;
+    min-height: 64px;
+  }
+
+  /* Input más grande para teclado mobile */
+  .premium-input {
+    font-size: 16px !important;
+    padding-top: 0.85rem !important;
+    padding-bottom: 0.85rem !important;
+  }
+
+  /* Votos dots más grandes */
+  .dot {
+    width: 10px;
+    height: 10px;
   }
 }
+
+/* ── Skeleton ranking ───────────────────────── */
+@keyframes sk-shimmer {
+  0%   { background-position: -400px 0 }
+  100% { background-position: 400px 0 }
+}
+
+.sk-song-row {
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+}
+
+.sk-rank-badge,
+.sk-thumb,
+.sk-bar,
+.sk-votes {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 800px 100%;
+  animation: sk-shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+.sk-rank-badge { width: 28px; height: 28px; min-width: 28px; border-radius: 50%; }
+.sk-thumb      { width: 50px; height: 50px; min-width: 50px; border-radius: 10px; }
+.sk-bar--title  { height: 13px; width: 70%; }
+.sk-bar--artist { height: 10px; width: 45%; }
+.sk-votes      { width: 36px; height: 36px; border-radius: 8px; }
 </style>

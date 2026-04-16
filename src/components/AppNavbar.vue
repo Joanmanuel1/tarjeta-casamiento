@@ -19,13 +19,6 @@ const handleScroll = () => {
   }
 }
 
-const closeMenu = () => {
-  const collapse = document.getElementById('navbarNav')
-  if (collapse && collapse.classList.contains('show')) {
-    const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapse)
-    bsCollapse.hide()
-  }
-}
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true })
@@ -42,36 +35,40 @@ onUnmounted(() => {
       <a class="navbar-brand GreatVibes fs-2" :href="isAdmin ? '#admin' : '#'">
         J & S
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-label="Toggle navigation">
-        <i class="pi pi-bars"></i>
-      </button>
-
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <div class="navbar-links justify-content-end d-none d-lg-flex">
         <ul class="navbar-nav align-items-center">
           <template v-if="!isAdmin">
-            <li class="nav-item"><a class="nav-link px-3" href="#inicio" @click="closeMenu">Inicio</a></li>
-            <li class="nav-item"><a class="nav-link px-3" href="#contador" @click="closeMenu">Cuenta regresiva</a></li>
-            <li class="nav-item"><a class="nav-link px-3" href="#historia" @click="closeMenu">Historia</a></li>
-            <li class="nav-item"><a class="nav-link px-3" href="#civil" @click="closeMenu">Ceremonia Civil</a></li>
-            <li class="nav-item"><a class="nav-link px-3" href="#fiesta" @click="closeMenu">Fiesta</a></li>
-            <li class="nav-item"><a class="nav-link px-3" href="#regalos" @click="closeMenu">Regalos</a></li>
-            <li class="nav-item"><a class="nav-link px-3" href="#musica" @click="closeMenu">Música</a></li>
-            <li class="nav-item"><a class="nav-link px-3" href="#admin" @click="closeMenu">Invitados</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#inicio">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#contador">Cuenta regresiva</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#historia">Historia</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#civil">Ceremonia Civil</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#fiesta">Fiesta</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#timeline">El gran día</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#deseos">Deseos</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#regalos">Regalos</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#musica">Música</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="#admin">Invitados</a></li>
             <li class="nav-item">
-              <a class="nav-link nav-cta px-4 py-2 rounded-pill ms-lg-3" href="#rsvp" @click="closeMenu">
+              <a class="nav-link nav-cta px-4 py-2 rounded-pill ms-lg-3" href="#rsvp">
                 Confirmar
               </a>
             </li>
           </template>
           <template v-else>
             <li class="nav-item">
-              <a class="nav-link nav-cta px-4 py-2 rounded-pill" href="#" @click="closeMenu">
+              <a class="nav-link nav-cta px-4 py-2 rounded-pill" href="#">
                 <i class="pi pi-arrow-left me-2"></i> Volver a la Invitación
               </a>
             </li>
           </template>
         </ul>
+      </div>
+
+      <!-- Mobile: solo CTA de confirmar -->
+      <div class="d-flex d-lg-none gap-2 align-items-center" v-if="!isAdmin">
+        <a class="nav-link nav-cta px-4 py-2 rounded-pill" href="#rsvp">
+          Confirmar
+        </a>
       </div>
     </div>
   </nav>
@@ -170,41 +167,11 @@ onUnmounted(() => {
   color: white !important;
 }
 
-.navbar-toggler {
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  padding: 0.5rem;
-  min-height: 48px;
-  min-width: 48px;
-}
-
-.scrolled .navbar-toggler {
-  color: var(--primary-color);
-}
-
 @media (max-width: 991.98px) {
-  .navbar-collapse {
-    background: rgba(255, 255, 255, 0.97);
-    backdrop-filter: blur(20px);
-    padding: 1rem 1.5rem 1.5rem;
-    border-radius: 1.5rem;
-    margin-top: 0.75rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(212, 163, 115, 0.1);
-  }
-
-  .nav-link {
-    color: #333 !important;
-    padding: 0;
-    justify-content: center;
-  }
-
   .nav-cta {
-    margin-top: 0.5rem;
-    margin-left: 0;
-    display: flex;
-    width: 100%;
+    font-size: 0.78rem !important;
+    padding: 0.5rem 1.1rem !important;
+    min-height: 40px;
   }
 }
 </style>

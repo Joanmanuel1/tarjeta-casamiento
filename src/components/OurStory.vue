@@ -46,29 +46,8 @@ onMounted(() => {
           <div class="ps-lg-5">
             <div class="narrative-content">
               <p class="fs-5 lh-lg text-muted mb-4">
-                Dicen que las mejores historias empiezan de la manera más inesperada. La nuestra comenzó con un simple
-                <span class="text-highlight">"like"</span> a una foto de <strong>Lisa</strong> (nuestra gatita favorita)
-                y una foto de una <strong>tarta de verdura</strong>.
+                Nuestra historia comenzo...
               </p>
-
-              <p class="fs-6 lh-lg text-muted mb-4">
-                Parecía algo casual, pero en el fondo fue el inicio de algo eterno. Como el gato que encuentra su
-                rincón favorito en la casa, nosotros encontramos en el otro ese hogar donde siempre queremos volver.
-              </p>
-
-              <p class="fs-6 lh-lg text-muted mb-5">
-                Entre charlas nocturnas, viajes compartidos y el crecimiento que solo el amor verdadero permite,
-                descubrimos que la vida es mucho más rica cuando se comparte con alguien que entiende tus chistes,
-                tus sueños y, por supuesto, tu amor por las tartas (incluso las de verdura).
-              </p>
-
-              <div class="emotional-quote p-4 rounded-4 shadow-sm bg-white">
-                <i class="pi pi-quote-left text-primary opacity-25 mb-2 d-block fs-3"></i>
-                <p class="mb-0 fst-italic text-dark fw-medium">
-                  "Nos elegimos cada día, con la misma complicidad de aquel primer mensaje y el amor que crece en cada
-                  pequeño detalle de nuestra vida juntos."
-                </p>
-              </div>
             </div>
           </div>
         </div>

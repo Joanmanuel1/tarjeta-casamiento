@@ -1,3 +1,7 @@
+<script setup>
+import AddToCalendar from './AddToCalendar.vue'
+</script>
+
 <template>
   <div class="event-premium-card p-4 p-md-5 rounded-5 shadow-sm bg-white border-light text-center h-100 hover-lift">
     <div class="event-icon-wrapper mb-4 mx-auto bg-light rounded-circle shadow-xs">
@@ -24,17 +28,18 @@
         suele enviar por calles precarias, ¡ignórenlo!</p>
     </div>
 
-    <div class="d-grid">
+    <div class="d-grid gap-2">
       <a href="https://maps.app.goo.gl/SBSGdeesLDC6EwDw7" target="_blank"
         class="btn btn-premium-outline rounded-pill py-3 fw-bold">
         <i class="pi pi-map-marker me-2"></i>Ubicación en Maps
       </a>
+      <AddToCalendar which="fiesta" variant="outline" />
     </div>
 
-    <div class="mt-4">
+    <div class="map-wrapper mt-4">
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3274.8726785634044!2d-58.355814599999995!3d-34.834293599999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32b3be862db31%3A0x25ec96e82d674b3e!2sLos%20cipreses%20quinta%20para%20eventos!5e0!3m2!1ses-419!2sar!4v1774715923284!5m2!1ses-419!2sar"
-        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </div>
@@ -95,6 +100,24 @@
 
 .extra-small {
   font-size: 0.75rem;
+}
+
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .map-wrapper {
+    aspect-ratio: 4/3;
+  }
+
+  .event-premium-card {
+    padding: 1.25rem !important;
+  }
 }
 
 @media (min-width: 768px) {
