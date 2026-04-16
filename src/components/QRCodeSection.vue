@@ -4,7 +4,7 @@ const openAlbum = () => window.open(albumUrl, '_blank')
 </script>
 
 <template>
-  <div class="qr-container py-4">
+  <div class="qr-container py-4 px-3">
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <div class="qr-card-premium p-4 p-md-5 rounded-5 bg-white shadow-sm border-light text-center">

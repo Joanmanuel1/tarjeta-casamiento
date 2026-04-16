@@ -1,5 +1,5 @@
 <template>
-  <div class="tips-wrapper py-4">
+  <div class="tips-wrapper py-4 px-3">
     <div class="row g-4 justify-content-center">
       <div v-for="(tip, index) in tips" :key="index" class="col-md-6 col-lg-5">
         <div

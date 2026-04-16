@@ -65,11 +65,11 @@ onUnmounted(() => {
       </div>
 
       <!-- Mobile: solo CTA de confirmar -->
-      <div class="d-flex d-lg-none gap-2 align-items-center" v-if="!isAdmin">
+      <!-- <div class="d-flex d-lg-none gap-2 align-items-center" v-if="!isAdmin">
         <a class="nav-link nav-cta px-4 py-2 rounded-pill" href="#rsvp">
           Confirmar
         </a>
-      </div>
+      </div> -->
     </div>
   </nav>
 </template>

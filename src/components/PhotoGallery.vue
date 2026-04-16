@@ -308,13 +308,13 @@ onUnmounted(() => {
 
 .lb-close {
   position: absolute;
-  top: max(1.2rem, env(safe-area-inset-top, 1.2rem));
-  right: max(1.2rem, env(safe-area-inset-right, 1.2rem));
+  top: 1.2rem;
+  right: 1.2rem;
   background: rgba(255, 255, 255, 0.12);
   border: none;
   color: white;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   font-size: 1.1rem;
   cursor: pointer;
@@ -323,15 +323,13 @@ onUnmounted(() => {
   justify-content: center;
   transition: background 0.2s;
   z-index: 1;
-  touch-action: manipulation;
 }
 
 .lb-close:hover { background: rgba(255,255,255,0.25); }
-.lb-close:active { background: rgba(255,255,255,0.4); transform: scale(0.9); }
 
 .lb-counter {
   position: absolute;
-  bottom: max(1.2rem, env(safe-area-inset-bottom, 1.2rem));
+  bottom: 1.2rem;
   left: 50%;
   transform: translateX(-50%);
   color: rgba(255,255,255,0.55);
@@ -347,8 +345,8 @@ onUnmounted(() => {
   background: rgba(255,255,255,0.1);
   border: none;
   color: white;
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   font-size: 1.2rem;
   cursor: pointer;
@@ -356,26 +354,15 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
-  touch-action: manipulation;
 }
 
 .lb-nav:hover { background: rgba(255,255,255,0.25); }
-.lb-nav:active { background: rgba(255,255,255,0.35); transform: translateY(-50%) scale(0.92); }
-.lb-nav--prev { left: max(0.75rem, env(safe-area-inset-left, 0.75rem)); }
-.lb-nav--next { right: max(0.75rem, env(safe-area-inset-right, 0.75rem)); }
+.lb-nav--prev { left: 1rem; }
+.lb-nav--next { right: 1rem; }
 
 @media (max-width: 600px) {
-  .lb-nav { width: 44px; height: 44px; font-size: 1rem; }
-
-  .lb-img-wrap {
-    max-width: 100vw;
-    max-height: 80dvh;
-  }
-
-  .lb-img {
-    max-width: 96vw;
-    max-height: 80dvh;
-    border-radius: 0.5rem;
-  }
+  .lb-nav { width: 40px; height: 40px; font-size: 1rem; }
+  .lb-nav--prev { left: 0.4rem; }
+  .lb-nav--next { right: 0.4rem; }
 }
 </style>

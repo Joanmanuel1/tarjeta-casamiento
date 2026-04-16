@@ -28,7 +28,7 @@ import AddToCalendar from './AddToCalendar.vue'
 
     <div class="d-grid gap-2">
       <a href="https://maps.app.goo.gl/1EoNEA5rh9U61FjM7" target="_blank"
-        class="btn btn-premium-outline rounded-pill py-3 fw-bold">
+        class="btn btn-premium-outline rounded-pill py-1 fw-bold">
         <i class="pi pi-map-marker me-2"></i>Cómo llegar
       </a>
       <AddToCalendar which="civil" variant="outline" />

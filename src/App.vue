@@ -255,7 +255,7 @@ onMounted(() => {
         <div class="footer-decoration mb-4">✦</div>
         <p class="GreatVibes footer-names">Joan & Stephie</p>
         <p class="footer-message">
-          Gracias por ser parte de nuestra historia de amor.<br>
+          Gracias por ser parte de nuestra historia.<br>
           Nos vemos el <strong>6 de noviembre de 2027</strong>.
         </p>
         <div class="footer-divider mx-auto my-4"></div>
@@ -335,16 +335,24 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   scroll-padding-top: 75px;
+  overflow-x: hidden; /* Prevent horizontal splash at the root */
 }
 
 body {
   font-family: var(--modern-font);
   color: var(--text-dark);
-  overflow-x: hidden;
   background-color: var(--bg-cream);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: rgba(212, 163, 115, 0.15);
   -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+  margin: 0;
+}
+
+#app {
+  width: 100%;
 }
 
 .GreatVibes {
@@ -711,7 +719,6 @@ input, textarea, select {
 
 /* overscroll natural */
 body {
-  overscroll-behavior-y: none;
 }
 
 /* Safe areas (notch, home indicator) */

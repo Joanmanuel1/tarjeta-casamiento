@@ -5,7 +5,7 @@ import womensDressWebp from '../assets/womens_dress.webp'
 import womensDressPng from '../assets/womens_dress.png'
 
 const dressCodeMessage = "Elegante pero cómodo 😎"
-const danceMessage = "Queremos que te veas increíble... ¡y que bailes toda la noche! 💃🕺✨"
+const danceMessage = "Queremos que te veas increíble... ¡y que bailes toda la noche! 💃🕺"
 </script>
 
 <template>
@@ -181,8 +181,8 @@ const danceMessage = "Queremos que te veas increíble... ¡y que bailes toda la 
 
   .dress-code-wrapper {
     padding-top: 1rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .outfit-badge {

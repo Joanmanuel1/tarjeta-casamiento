@@ -49,7 +49,7 @@ onUnmounted(() => {
 <style scoped>
 .back-to-top {
   position: fixed;
-  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(54px + env(safe-area-inset-bottom, 0px));
   right: 1rem;
   width: 50px;
   height: 50px;

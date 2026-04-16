@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import gsap from 'gsap'
-import storyImg from '../assets/1.jpeg'
+import storyImg from '../assets/1.webp'
 
 const storyRef = ref(null)
 

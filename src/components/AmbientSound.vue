@@ -128,7 +128,7 @@ function toggle() {
 
 @media (max-width: 767px) {
   .ambient-btn {
-    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(60px + env(safe-area-inset-bottom, 0px));
     left: 1rem;
     width: 44px;
     height: 44px;

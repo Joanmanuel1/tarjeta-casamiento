@@ -33,7 +33,7 @@ const copyToClipboard = (text, label) => {
 </script>
 
 <template>
-  <div class="gifts-container py-4">
+  <div class="gifts-container py-4 px-3">
     <Toast />
 
     <div class="row g-4 justify-content-center">
