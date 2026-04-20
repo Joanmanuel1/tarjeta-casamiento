@@ -25,26 +25,59 @@ import PhotoGallery from './components/PhotoGallery.vue'
 import WishWall from './components/WishWall.vue'
 import RSVPForm from './components/RSVPForm.vue'
 
-// ── Admin: lazy (solo se carga al navegar a #admin) ───────────────────
+// ── Admin: lazy (solo se carga al navegar a /admin-joan-stephie) ─────
 const GuestAdmin = defineAsyncComponent(() => import('./components/GuestAdmin.vue'))
 
 gsap.registerPlugin(ScrollTrigger)
 
+const ADMIN_PATH = '/admin-joan-stephie'
+const ADMIN_USER = 'joan'
+const ADMIN_PASS = 'casamiento'
+
+const isAdminPath = ref(window.location.pathname === ADMIN_PATH)
+const adminAuthenticated = ref(sessionStorage.getItem('admin_auth') === '1')
 const currentHash = ref(window.location.hash || '#inicio')
 const introFinished = ref(false)
 
-// Handle hash-based routing
+// Login form state
+const loginUser = ref('')
+const loginPass = ref('')
+const loginError = ref('')
+
+function doLogin() {
+  if (loginUser.value === ADMIN_USER && loginPass.value === ADMIN_PASS) {
+    sessionStorage.setItem('admin_auth', '1')
+    adminAuthenticated.value = true
+    loginError.value = ''
+    document.body.style.overflow = ''
+    window.scrollTo(0, 0)
+  } else {
+    loginError.value = 'Usuario o contraseña incorrectos'
+    loginPass.value = ''
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('admin_auth')
+  adminAuthenticated.value = false
+  window.history.pushState({}, '', '/')
+  isAdminPath.value = false
+}
+
+// Handle hash-based routing (for non-admin pages)
 const handleHashChange = () => {
   currentHash.value = window.location.hash || '#inicio'
-  if (currentHash.value === '#admin') {
-    document.body.style.overflow = '' // Ensure scrolling for admin table
-    window.scrollTo(0, 0)
-  }
+}
+
+// Handle back/forward navigation
+const handlePopstate = () => {
+  isAdminPath.value = window.location.pathname === ADMIN_PATH
+  currentHash.value = window.location.hash || '#inicio'
 }
 
 const onIntroDone = () => {
   introFinished.value = true
-  if (currentHash.value !== '#admin') {
+  if (!isAdminPath.value) {
     window.scrollTo(0, 0)
   }
 }
@@ -111,26 +144,27 @@ onMounted(() => {
     ScrollTrigger.refresh()
   })
 
-  // Listen to hash changes for routing
+  // Listen to hash changes and popstate for routing
   window.addEventListener('hashchange', handleHashChange)
+  window.addEventListener('popstate', handlePopstate)
 })
 </script>
 
 <template>
   <div class="wedding-website">
-    <!-- Intro cinematográfica (solo primera visita) -->
-    <IntroScreen v-if="!introFinished" @done="onIntroDone" />
+    <!-- Intro cinematográfica (solo en landing, no en admin) -->
+    <IntroScreen v-if="!introFinished && !isAdminPath" @done="onIntroDone" />
 
-    <!-- Cursor personalizado (desktop only) -->
-    <CustomCursor />
+    <!-- Cursor personalizado (desktop only, no en admin) -->
+    <CustomCursor v-if="!isAdminPath" />
 
     <div class="scroll-progress-container">
       <div class="scroll-progress"></div>
     </div>
-    <AppNavbar :is-admin="currentHash === '#admin'" />
+    <AppNavbar :is-admin="isAdminPath" />
 
     <main>
-      <div v-if="currentHash !== '#admin'" class="landing-content">
+      <div v-if="!isAdminPath" class="landing-content">
         <HeroSection id="inicio" :active="introFinished" />
 
         <!-- Divider: Hero → Countdown -->
@@ -245,12 +279,36 @@ onMounted(() => {
       </div>
 
       <!-- Private Admin View -->
-      <div v-else class="admin-content animate-fade-in pt-5">
-        <GuestAdmin id="admin-guests" />
+      <div v-else-if="isAdminPath">
+        <!-- Login wall -->
+        <div v-if="!adminAuthenticated" class="admin-login-wrap">
+          <form class="admin-login-card" @submit.prevent="doLogin">
+            <p class="GreatVibes admin-login-title">Panel de administración</p>
+            <p v-if="loginError" class="admin-login-error">{{ loginError }}</p>
+            <div class="admin-login-field">
+              <label for="adm-user">Usuario</label>
+              <input id="adm-user" v-model="loginUser" type="text" autocomplete="username" required />
+            </div>
+            <div class="admin-login-field">
+              <label for="adm-pass">Contraseña</label>
+              <input id="adm-pass" v-model="loginPass" type="password" autocomplete="current-password" required />
+            </div>
+            <button type="submit" class="admin-login-btn">Entrar</button>
+          </form>
+        </div>
+        <!-- Admin content once authenticated -->
+        <div v-else class="admin-content animate-fade-in pt-5">
+          <div class="admin-logout-bar container-fluid px-4 py-2 d-flex justify-content-end">
+            <button class="admin-logout-btn" @click="doLogout">
+              <i class="pi pi-sign-out me-2"></i>Salir
+            </button>
+          </div>
+          <GuestAdmin id="admin-guests" />
+        </div>
       </div>
     </main>
 
-    <footer v-if="currentHash !== '#admin'" class="wedding-footer">
+    <footer v-if="!isAdminPath" class="wedding-footer">
       <div class="container text-center">
         <div class="footer-decoration mb-4">✦</div>
         <p class="GreatVibes footer-names">Joan & Stephie</p>
@@ -268,7 +326,7 @@ onMounted(() => {
     <BackToTop />
 
     <!-- Botón de música ambiental -->
-    <AmbientSound v-if="currentHash !== '#admin'" />
+    <AmbientSound v-if="!isAdminPath" />
 
   </div>
 </template>
@@ -655,6 +713,124 @@ section {
     padding: 5rem 0 3rem;
   }
 }
+
+/* ===========================
+   ADMIN LOGIN
+   =========================== */
+.admin-login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-cream);
+  padding: 2rem 1rem;
+}
+
+.admin-login-card {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.admin-login-title {
+  font-size: 2rem;
+  color: var(--primary-color);
+  text-align: center;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.admin-login-error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 0.75rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  margin: 0;
+  text-align: center;
+}
+
+.admin-login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.admin-login-field label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.admin-login-field input {
+  border: 1.5px solid rgba(212,163,115,0.3);
+  border-radius: 0.75rem;
+  padding: 0.7rem 1rem;
+  font-size: 16px !important;
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--bg-cream);
+  color: var(--text-dark) !important;
+  -webkit-text-fill-color: var(--text-dark) !important;
+}
+
+.admin-login-field input:focus {
+  border-color: var(--primary-color);
+  background: white;
+  color: var(--text-dark) !important;
+  -webkit-text-fill-color: var(--text-dark) !important;
+}
+
+.admin-login-field input:-webkit-autofill,
+.admin-login-field input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-cream) inset;
+  -webkit-text-fill-color: var(--text-dark) !important;
+}
+
+.admin-login-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  min-height: 52px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.admin-login-btn:hover { background: var(--primary-dark); }
+.admin-login-btn:active { transform: scale(0.97); }
+
+.admin-logout-bar {
+  background: white;
+  border-bottom: 1px solid rgba(212,163,115,0.15);
+}
+
+.admin-logout-btn {
+  background: none;
+  border: 1.5px solid rgba(212,163,115,0.4);
+  border-radius: 2rem;
+  padding: 0.4rem 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s;
+  min-height: 36px;
+}
+.admin-logout-btn:hover { color: var(--primary-dark); border-color: var(--primary-color); }
 
 /* ===========================
    CUSTOM CURSOR

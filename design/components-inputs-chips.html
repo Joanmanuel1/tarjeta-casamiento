@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding: 28px; background: var(--bg-cream); font-family: var(--modern-font); }
+.pill { display:flex; align-items:center; background: white; border-radius: 9999px; border: 1px solid rgba(0,0,0,.06); box-shadow: 0 4px 10px rgba(0,0,0,.04); padding: 8px 12px; max-width: 420px; gap: 10px; margin-bottom: 14px;}
+.pill .icon { color: #d4a373; opacity:.5; font-size: 16px; padding-left: 6px; }
+.pill input { border:0; background:transparent; outline:none; flex:1; font-size: 16px; padding: 8px 0; color: var(--text-dark); font-family: var(--modern-font); }
+.chips { display:flex; gap: 8px; flex-wrap:wrap; margin-top: 4px; }
+.chip { background: #f5f5f5; border: 1.5px solid #efefef; border-radius: 2rem; padding: 6px 14px; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor:pointer; transition: all .18s ease; }
+.chip.active { background: #faedcd; border-color: #d4a373; color: #8c714d; transform: scale(1.04); }
+</style></head>
+<body>
+<div class="pill"><span class="icon">🔍</span><input placeholder="Escribí tu nombre o apellido"></div>
+<div class="chips">
+  <div class="chip active">🍽️ Sin restricciones</div>
+  <div class="chip">🥗 Vegetariano</div>
+  <div class="chip">🌱 Vegano</div>
+  <div class="chip">🌾 Celíaco</div>
+</div>
+</body></html>

@@ -192,7 +192,7 @@ onUnmounted(() => {
 
 <style scoped>
 .gallery-section {
-  background: var(--bg-cream);
+  background: var(--bg-light);
 }
 
 /* ── Masonry ─────────────────────────────────── */
@@ -204,12 +204,15 @@ onUnmounted(() => {
 .masonry-item {
   break-inside: avoid;
   margin-bottom: 0.75rem;
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   overflow: hidden;
   cursor: pointer;
   position: relative;
   will-change: transform, opacity;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  transition: box-shadow 0.3s ease;
 }
+.masonry-item:hover { box-shadow: 0 12px 32px rgba(212,163,115,0.18); }
 
 /* Alturas variadas para efecto masonry real */
 .masonry-item:nth-child(3n + 1) img { aspect-ratio: 4/5; }

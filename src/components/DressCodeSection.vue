@@ -1,201 +1,175 @@
 <script setup>
-import mensDressWebp from '../assets/mens_dress.webp'
-import mensDressPng from '../assets/mens_dress.png'
+import mensDressWebp  from '../assets/mens_dress.webp'
+import mensDressPng   from '../assets/mens_dress.png'
 import womensDressWebp from '../assets/womens_dress.webp'
-import womensDressPng from '../assets/womens_dress.png'
-
-const dressCodeMessage = "Elegante pero cómodo 😎"
-const danceMessage = "Queremos que te veas increíble... ¡y que bailes toda la noche! 💃🕺"
+import womensDressPng  from '../assets/womens_dress.png'
 </script>
 
 <template>
-  <div class="dress-code-wrapper py-5 px-3">
-    <div class="header-human text-center mb-5 section-reveal">
-      <h3 class="GreatVibes display-5 mb-2">{{ dressCodeMessage }}</h3>
-      <p class="text-muted small tracking-widest text-uppercase">El estilo perfecto para celebrar</p>
+  <div class="dc-wrapper">
+    <!-- Mensaje principal -->
+    <div class="text-center mb-5 section-reveal">
+      <h3 class="GreatVibes display-5 dc-headline">Elegante pero cómodo 😎</h3>
+      <p class="dc-note">El estilo perfecto para celebrar · Se reserva el color blanco</p>
     </div>
 
-    <div class="row g-4 justify-content-center">
-      <!-- Card Hombres -->
-      <div class="col-md-6 col-lg-5 col-xl-4 section-reveal">
-        <div class="outfit-card p-4 rounded-5 shadow-lg h-100 hover-glow scheme-men">
-          <div class="outfit-image-wrapper mb-4 overflow-hidden rounded-4 shadow-sm">
-            <picture>
-              <source :srcset="mensDressWebp" type="image/webp" />
-              <img :src="mensDressPng" alt="Dress Code Hombres" class="w-100 object-fit-cover"
-                loading="lazy" decoding="async" style="aspect-ratio: 3/4; width: 100%;">
-            </picture>
+    <!-- Cards -->
+    <div class="dc-grid">
+      <!-- Hombres -->
+      <div class="dc-card dc-card--men section-reveal">
+        <div class="dc-img-wrap">
+          <picture>
+            <source :srcset="mensDressWebp" type="image/webp" />
+            <img :src="mensDressPng" alt="Dress Code Hombres" loading="lazy" decoding="async" />
+          </picture>
+          <div class="dc-img-overlay">
+            <span class="dc-img-badge">👔 Para Ellos</span>
           </div>
-
-          <div class="text-center">
-            <div class="outfit-badge mb-3 mx-auto">👔 🕺 👞</div>
-            <h4 class="fw-bold mb-1">Para Ellos</h4>
-            <p class="small text-muted mb-4">Semi-Formal / Elegante Sport</p>
-
-            <div class="outfit-details px-3">
-              <ul class="list-unstyled d-flex flex-column gap-2 text-start mx-auto" style="max-width: 220px;">
-                <li class="d-flex align-items-center gap-2">
-                  <span class="emoji-bullet">👔</span>
-                  <span class="small fw-medium">Camisa y pantalón</span>
-                </li>
-                <li class="d-flex align-items-center gap-2">
-                  <span class="emoji-bullet">🧥</span>
-                  <span class="small fw-medium">Saco (opcional)</span>
-                </li>
-                <li class="d-flex align-items-center gap-2">
-                  <span class="emoji-bullet">👞</span>
-                  <span class="small fw-medium">Calzado cómodo</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+        </div>
+        <div class="dc-card-body">
+          <div class="dc-emoji-row mb-3">👔 🕺 👞</div>
+          <h4 class="dc-card-title">Semi-Formal / Elegante Sport</h4>
+          <ul class="dc-list">
+            <li><span class="dc-list-emoji">👔</span><span>Camisa y pantalón</span></li>
+            <li><span class="dc-list-emoji">🧥</span><span>Saco (opcional)</span></li>
+            <li><span class="dc-list-emoji">👞</span><span>Calzado cómodo</span></li>
+          </ul>
         </div>
       </div>
 
-      <!-- Card Mujeres -->
-      <div class="col-md-6 col-lg-5 col-xl-4 section-reveal">
-        <div class="outfit-card p-4 rounded-5 shadow-lg h-100 hover-glow scheme-women">
-          <div class="outfit-image-wrapper mb-4 overflow-hidden rounded-4 shadow-sm">
-            <picture>
-              <source :srcset="womensDressWebp" type="image/webp" />
-              <img :src="womensDressPng" alt="Dress Code Mujeres" class="w-100 object-fit-cover"
-                loading="lazy" decoding="async" style="aspect-ratio: 3/4; width: 100%;">
-            </picture>
+      <!-- Mujeres -->
+      <div class="dc-card dc-card--women section-reveal">
+        <div class="dc-img-wrap">
+          <picture>
+            <source :srcset="womensDressWebp" type="image/webp" />
+            <img :src="womensDressPng" alt="Dress Code Mujeres" loading="lazy" decoding="async" />
+          </picture>
+          <div class="dc-img-overlay">
+            <span class="dc-img-badge">👗 Para Ellas</span>
           </div>
-
-          <div class="text-center">
-            <div class="outfit-badge mb-3 mx-auto">👗 💃 👠</div>
-            <h4 class="fw-bold mb-1">Para Ellas</h4>
-            <p class="small text-muted mb-4">Semi-Formal / Elegante</p>
-
-            <div class="outfit-details px-3">
-              <ul class="list-unstyled d-flex flex-column gap-2 text-start mx-auto" style="max-width: 220px;">
-                <li class="d-flex align-items-center gap-2">
-                  <span class="emoji-bullet">👗</span>
-                  <span class="small fw-medium">Vestido (corto o largo)</span>
-                </li>
-                <li class="d-flex align-items-center gap-2">
-                  <span class="emoji-bullet">✨</span>
-                  <span class="small fw-medium">Conjunto elegante</span>
-                </li>
-                <li class="d-flex align-items-center gap-2">
-                  <span class="emoji-bullet">👠</span>
-                  <span class="small fw-medium">Zapatos para bailar</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+        </div>
+        <div class="dc-card-body">
+          <div class="dc-emoji-row mb-3">👗 💃 👠</div>
+          <h4 class="dc-card-title">Semi-Formal / Elegante</h4>
+          <ul class="dc-list">
+            <li><span class="dc-list-emoji">👗</span><span>Vestido (corto o largo)</span></li>
+            <li><span class="dc-list-emoji">✨</span><span>Conjunto elegante</span></li>
+            <li><span class="dc-list-emoji">👠</span><span>Zapatos para bailar</span></li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <div class="text-center mt-5 footer-reveal">
-      <div class="dance-message-bubble p-4 rounded-pill shadow-sm mx-auto">
-        <span class="dance-text fw-bold">{{ danceMessage }}</span>
-      </div>
+    <!-- Banner baile -->
+    <div class="dc-dance-banner section-reveal">
+      <span class="dc-dance-text">Queremos que te veas increíble… ¡y que bailes toda la noche! 💃🕺</span>
     </div>
   </div>
 </template>
 
 <style scoped>
-.dress-code-wrapper {
-  background-color: transparent;
+.dc-wrapper { padding-bottom: 1rem; }
+
+.dc-headline { color: var(--primary-dark); }
+.dc-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
 }
 
-.outfit-card {
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.02);
-  transition: all 0.5s var(--transition-smooth);
-  position: relative;
+/* ── Grid ─────────────────────────────────── */
+.dc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  max-width: 720px;
+  margin: 0 auto 2rem;
+}
+@media (min-width: 600px) {
+  .dc-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Card ─────────────────────────────────── */
+.dc-card {
+  border-radius: 2rem;
   overflow: hidden;
-}
-
-.scheme-men {
-  background: #fdfbf7;
-}
-
-.scheme-women {
-  background: #fff5f5;
-}
-
-.outfit-image-wrapper {
-  border: 4px solid white;
-}
-
-.outfit-badge {
   background: white;
-  width: fit-content;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 1.1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.07);
+  border: 1px solid rgba(0,0,0,0.03);
+  transition: all 0.45s var(--transition-bounce);
+}
+@media (min-width: 768px) {
+  .dc-card:hover {
+    transform: translateY(-10px) scale(1.01);
+    box-shadow: 0 30px 60px rgba(212,163,115,0.12);
+  }
+}
+.dc-card:active { transform: scale(0.98); }
+
+/* Imagen */
+.dc-img-wrap { position: relative; overflow: hidden; }
+.dc-img-wrap img {
+  width: 100%; display: block;
+  aspect-ratio: 3/4; object-fit: cover;
+  transition: transform 0.5s var(--transition-smooth);
+}
+.dc-card:hover .dc-img-wrap img { transform: scale(1.04); }
+
+.dc-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 55%);
+  display: flex; align-items: flex-end; padding: 1.1rem;
+}
+.dc-img-badge {
+  background: rgba(255,255,255,0.92);
+  color: var(--text-dark);
+  font-size: 0.78rem; font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 2rem;
+  backdrop-filter: blur(6px);
 }
 
-.emoji-bullet {
-  font-size: 1.2rem;
-  min-width: 30px;
+/* Body */
+.dc-card-body { padding: 1.25rem 1.35rem 1.5rem; text-align: center; }
+.dc-emoji-row { font-size: 1.3rem; letter-spacing: 0.15em; }
+.dc-card-title {
+  font-size: 0.82rem; font-weight: 600;
+  color: var(--text-muted); margin: 0 0 1rem;
+  text-transform: uppercase; letter-spacing: 0.08em;
 }
 
-.dance-message-bubble {
+.dc-list {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  text-align: left; max-width: 200px; margin: 0 auto;
+}
+.dc-list li { display: flex; align-items: center; gap: 0.6rem; }
+.dc-list-emoji { font-size: 1.1rem; min-width: 24px; }
+.dc-list span:last-child { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); }
+
+/* ── Banner baile ─────────────────────────── */
+.dc-dance-banner {
+  max-width: 680px;
+  margin: 0 auto;
   background: white;
-  max-width: 800px;
-  border: 1px solid var(--secondary-color);
-  transition: all 0.3s ease;
+  border: 1.5px solid rgba(212,163,115,0.25);
+  border-radius: 2rem;
+  padding: 1.25rem 2rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(212,163,115,0.1);
 }
-
-.dance-text {
+.dc-dance-text {
   background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-size: 1.1rem;
-  animation: shine 3s infinite;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
-@keyframes shine {
-  0% {
-    opacity: 0.8;
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.02);
-  }
-
-  100% {
-    opacity: 0.8;
-  }
-}
-
-@media (min-width: 768px) {
-  .outfit-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 30px 60px rgba(212, 163, 115, 0.1) !important;
-  }
-}
-
-@media (max-width: 767px) {
-  .outfit-card:active {
-    transform: scale(0.98);
-  }
-
-  .dress-code-wrapper {
-    padding-top: 1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .outfit-badge {
-    font-size: 1.3rem;
-  }
-
-  .dance-message-bubble {
-    border-radius: 1.25rem !important;
-    padding: 1rem 1.25rem !important;
-  }
-
-  .dance-text {
-    font-size: 0.95rem;
-  }
+@media (max-width: 599px) {
+  .dc-dance-banner { padding: 1rem 1.25rem; border-radius: 1.5rem; }
+  .dc-dance-text { font-size: 0.9rem; }
 }
 </style>

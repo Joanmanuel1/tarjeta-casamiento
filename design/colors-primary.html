@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin: 0; padding: 24px; background: var(--bg-cream); font-family: var(--modern-font); }
+.grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+.swatch { border-radius: var(--radius-md); padding: 16px; min-height: 100px; display: flex; flex-direction: column; justify-content: flex-end; color: var(--text-dark); box-shadow: var(--shadow-sm); border: var(--border-hairline); }
+.swatch.dark { color: white; }
+.name { font-weight: 700; font-size: 13px; }
+.hex  { font-family: var(--mono-font); font-size: 11px; opacity: 0.75; margin-top: 2px; }
+.token { font-size: 10px; opacity: 0.6; margin-top: 2px; letter-spacing: .05em; }
+</style></head>
+<body>
+<div class="grid">
+  <div class="swatch" style="background:#d4a373; color:white"><div class="name">Primary</div><div class="hex">#D4A373</div><div class="token">--primary-color</div></div>
+  <div class="swatch" style="background:#bc8a5f; color:white"><div class="name">Primary Dark</div><div class="hex">#BC8A5F</div><div class="token">--primary-dark</div></div>
+  <div class="swatch" style="background:#faedcd"><div class="name">Secondary</div><div class="hex">#FAEDCD</div><div class="token">--secondary-color</div></div>
+  <div class="swatch" style="background:#ccd5ae"><div class="name">Accent (Sage)</div><div class="hex">#CCD5AE</div><div class="token">--accent-color</div></div>
+</div>
+</body></html>

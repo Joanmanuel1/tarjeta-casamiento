@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding: 28px; background: var(--bg-cream); font-family: var(--modern-font); }
+.timeline { display:flex; gap: 22px; align-items:flex-start; }
+.step { text-align:center; flex: 1; }
+.node { width: 40px; height: 40px; border-radius: 50%; display:flex; align-items:center; justify-content:center; color: white; font-size: 16px; margin: 0 auto 8px; box-shadow: 0 4px 14px rgba(0,0,0,.12); }
+.t { font-size: 11px; font-weight: 800; color: #d4a373; letter-spacing: .05em; }
+.l { font-size: 12px; font-weight: 700; color: var(--text-dark); margin-top: 2px;}
+.d { font-size: 10px; color: var(--text-muted); margin-top: 2px;}
+.line { height: 3px; background: linear-gradient(90deg, #d4a373, #ccd5ae); border-radius: 4px; margin: 20px -30px 0;}
+</style></head>
+<body>
+<div class="timeline">
+  <div class="step"><div class="node" style="background:#d4a373">🚗</div><div class="t">11:00</div><div class="l">Llegada</div></div>
+  <div class="step"><div class="node" style="background:#bc8a5f">❤</div><div class="t">11:30</div><div class="l">Ceremonia</div></div>
+  <div class="step"><div class="node" style="background:#ccd5ae">✨</div><div class="t">13:00</div><div class="l">Brindis</div></div>
+  <div class="step"><div class="node" style="background:#d4a373">🎵</div><div class="t">20:00</div><div class="l">Fiesta</div></div>
+</div>
+</body></html>

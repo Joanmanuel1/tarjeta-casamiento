@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding: 24px; background: var(--bg-cream); }
+.grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.swatch { border-radius: var(--radius-md); padding: 14px; height: 80px; display: flex; flex-direction: column; justify-content: flex-end; color: white; font-family: var(--modern-font); box-shadow: var(--shadow-sm); }
+.name { font-weight: 700; font-size: 12px; }
+.meta { font-size: 10px; opacity: .9; margin-top: 2px; }
+.intro { background: #0e0c0a; }
+.footer { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+.sunset { background: linear-gradient(135deg, #d4a373 0%, #a44a3f 100%); }
+.night { background: linear-gradient(135deg, #2b2d42 0%, #8d99ae 100%); }
+</style></head>
+<body>
+<div class="grid">
+  <div class="swatch intro"><div class="name">Intro / Cinematic</div><div class="meta">#0E0C0A · with gold & at 6%</div></div>
+  <div class="swatch footer"><div class="name">Footer Navy</div><div class="meta">#1A1A2E → #16213E → #0F3460</div></div>
+  <div class="swatch sunset"><div class="name">Sunset Gradient</div><div class="meta">Countdown · 18–21h</div></div>
+  <div class="swatch night"><div class="name">Night Gradient</div><div class="meta">Countdown · 21–05h</div></div>
+</div>
+</body></html>

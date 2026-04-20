@@ -336,8 +336,9 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
 </template>
 
 <style scoped>
+/* ── Base section ────────────────────────── */
 .rsvp-fluid-section {
-  background-color: #fdfbf7;
+  background-color: var(--bg-cream);
   min-height: 100dvh;
   transition: all 0.5s ease;
 }
@@ -348,45 +349,41 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
   z-index: 10;
 }
 
-/* Focus Mode: Lock the experience */
+/* Focus mode */
 .rsvp-fluid-section.focus-mode {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100dvh;
+  top: 0; left: 0;
+  width: 100%; height: 100dvh;
   z-index: 9999;
-  background-color: rgba(253, 251, 247, 0.98);
+  background-color: rgba(253,251,247,0.98);
   padding-top: 5vh;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
 
-/* Search UI */
+/* ── Search ──────────────────────────────── */
 .search-experience-fixed {
   position: relative;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .search-pill-premium {
+  border: 1.5px solid rgba(212,163,115,0.2) !important;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
 .search-pill-premium:focus-within {
   transform: translateY(-2px);
-  border-color: var(--primary-color);
-  box-shadow: 0 10px 25px rgba(212, 163, 115, 0.15) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 10px 25px rgba(212,163,115,0.15) !important;
 }
 
 .premium-input-field {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  font-size: 1.1rem !important;
+  font-size: 1.05rem !important;
   color: var(--text-dark) !important;
-  min-width: 0;
-  /* Important for flex-shrink on mobile */
-  width: 100%;
+  min-width: 0; width: 100%;
 }
 
 .results-overlay {
@@ -394,193 +391,103 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
   overflow-y: auto;
   z-index: 100;
   position: absolute;
-  left: 0;
-  right: 0;
-  width: 100%;
+  left: 0; right: 0; width: 100%;
+  border-radius: 1.25rem !important;
+  border: 1px solid rgba(212,163,115,0.15) !important;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1) !important;
 }
 
-/* Dim confirmation area when searching */
-.search-experience-fixed:focus-within+.confirmation-area {
-  opacity: 0.3;
+.result-card-accessible {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.result-card-accessible:hover { background: var(--bg-cream); }
+.result-card-accessible:active { background: var(--secondary-color); }
+
+.search-experience-fixed:focus-within + .confirmation-area {
+  opacity: 0.35;
   pointer-events: none;
   filter: blur(2px);
   transition: all 0.3s ease;
 }
 
-/* Selected List */
+/* ── Top actions bar ─────────────────────── */
+.sticky-top-actions {
+  position: sticky; top: 0; z-index: 100;
+  border-radius: 1.25rem !important;
+  border: 1px solid rgba(212,163,115,0.15) !important;
+}
+
+/* ── Selected list ───────────────────────── */
 .selected-list {
-  max-height: calc(100vh - 420px);
+  max-height: calc(100dvh - 420px);
   overflow-y: auto;
 }
 
-/* Avatar Styles */
+/* ── Avatar ──────────────────────────────── */
 .guest-avatar-large {
-  width: 45px;
-  height: 45px;
+  width: 44px; height: 44px;
   background: var(--secondary-color);
   color: var(--primary-dark);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 1rem;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1rem;
 }
 
 .guest-avatar-small {
-  width: 30px;
-  height: 30px;
+  width: 30px; height: 30px;
   background: var(--primary-color);
   color: white;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.8rem;
 }
 
-/* Compact Confirm Cards (Ultra-Compact) */
+/* ── Confirm cards ───────────────────────── */
 .confirm-card-compact {
-  padding: 1rem !important;
-  margin-bottom: 0.75rem !important;
-  transition: all 0.3s ease;
+  border-radius: 1.25rem !important;
+  border: 1px solid rgba(212,163,115,0.12) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04) !important;
+  transition: all 0.25s ease;
 }
 
-.confirm-card-compact h6 {
-  font-size: 0.95rem;
-  margin-bottom: 0;
-}
-
+/* ── Attendance buttons ──────────────────── */
 .attendance-btn-compact {
   background: white;
-  border: 1px solid #efefef;
+  border: 1.5px solid rgba(0,0,0,0.07);
   color: var(--text-muted);
   font-weight: 600;
   transition: all 0.2s ease;
   font-size: 0.85rem;
+  border-radius: 2rem;
+  min-height: 44px;
 }
-
-.attendance-btn-compact.active {
-  transform: scale(1.02);
-}
-
+.attendance-btn-compact:active { transform: scale(0.97); }
 .attendance-btn-compact.yes.active {
-  background: #faedcd;
-  color: #8c714d;
-  border-color: #d4a373;
+  background: var(--secondary-color);
+  color: var(--primary-dark);
+  border-color: var(--primary-color);
 }
-
 .attendance-btn-compact.no.active {
-  background: #f8f9fa;
-  color: #adb5bd;
-  border-color: #dee2e6;
+  background: #f1f3f4;
+  color: #7a8592;
+  border-color: #c8cdd2;
 }
 
-/* Animations */
-.animate-drop-in {
-  animation: dropIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-@keyframes dropIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Top Actions Bar */
-.sticky-top-actions {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.shadow-lg-up {
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
-}
-
-.btn-primary-premium {
-  background: var(--text-dark);
-  border: none;
-  font-weight: 800;
-  font-size: 1.1rem;
-}
-
-/* Utils */
-.custom-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scroll::-webkit-scrollbar-thumb {
-  background: #d4a373;
-  border-radius: 10px;
-}
-
-.tracking-widest {
-  letter-spacing: 0.2em;
-}
-
-.text-premium {
-  color: var(--primary-color);
-}
-
-.signature-line {
-  width: 40px;
-  height: 3px;
-  background: var(--primary-color);
-  border-radius: 2px;
-}
-
-.extra-small {
-  font-size: 0.7rem;
-}
-
-/* ── Menu Chips ──────────────────────────────── */
-.menu-chips {
-  gap: 0.4rem !important;
-}
-
+/* ── Menu chips ──────────────────────────── */
+.menu-chips { gap: 0.4rem !important; flex-wrap: wrap; }
 .menu-chip {
-  background: #f5f5f5;
-  border: 1.5px solid #efefef;
+  background: var(--bg-cream);
+  border: 1.5px solid rgba(0,0,0,0.06);
   border-radius: 2rem;
   padding: 0.3rem 0.85rem;
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.78rem; font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.18s ease;
-  white-space: nowrap;
-  line-height: 1.6;
+  white-space: nowrap; line-height: 1.6;
 }
-
-.menu-chip:hover {
-  border-color: var(--primary-color);
-  color: var(--primary-dark);
-}
-
+.menu-chip:hover { border-color: var(--primary-color); color: var(--primary-dark); }
 .menu-chip.active {
   background: var(--secondary-color);
   border-color: var(--primary-color);
@@ -588,46 +495,51 @@ const getInitials = (g) => (g.nombre[0] + g.apellido[0]).toUpperCase()
   transform: scale(1.04);
 }
 
-/* ── Skeleton screens ───────────────────────── */
+/* ── Success view ────────────────────────── */
+.animate-fade-in {
+  animation: rsvpFade 0.6s ease-out forwards;
+}
+@keyframes rsvpFade {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-drop-in {
+  animation: rsvpDrop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes rsvpDrop {
+  from { opacity: 0; transform: translateY(-16px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.signature-line {
+  width: 40px; height: 3px;
+  background: var(--primary-color); border-radius: 2px;
+}
+
+/* ── Skeleton ────────────────────────────── */
 @keyframes sk-shimmer {
   0%   { background-position: -400px 0 }
   100% { background-position: 400px 0 }
 }
-
-.sk-line,
-.sk-searchbar,
-.sk-avatar,
-.sk-guest-row {
+.sk-line, .sk-searchbar, .sk-avatar {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 800px 100%;
   animation: sk-shimmer 1.4s ease-in-out infinite;
   border-radius: 8px;
 }
-
-.sk-title   { width: 220px; height: 40px; border-radius: 4px; }
-.sk-subtitle{ width: 160px; height: 16px; border-radius: 4px; }
+.sk-title    { width: 220px; height: 40px; }
+.sk-subtitle { width: 160px; height: 16px; }
 .sk-searchbar { height: 52px; border-radius: 2rem; }
-
-.sk-guest-row {
-  background: white;
-  animation: none; /* el shimmer va en los elementos internos */
-  border: 1px solid #f0f0f0;
-}
-
-.sk-avatar {
-  width: 45px;
-  height: 45px;
-  min-width: 45px;
-  border-radius: 14px;
-}
-
+.sk-guest-row { background: white; border: 1px solid #f0f0f0; border-radius: 1rem; }
+.sk-avatar { width: 44px; height: 44px; min-width: 44px; border-radius: 12px; }
 .sk-name   { width: 60%; height: 14px; }
-.sk-status { width: 30%; height: 11px; border-radius: 4px; }
+.sk-status { width: 30%; height: 11px; }
 
-/* Mobile Tweaks */
-@media (max-width: 768px) {
-  .display-4 {
-    font-size: 2.5rem;
-  }
-}
+/* ── Misc ─────────────────────────────────── */
+.custom-scroll::-webkit-scrollbar { width: 4px; }
+.custom-scroll::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
+.text-premium { color: var(--primary-color); }
+.tracking-widest { letter-spacing: 0.2em; }
+.extra-small { font-size: 0.7rem; }
 </style>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin: 0; padding: 24px; background: var(--bg-cream); font-family: var(--modern-font); }
+.grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+.swatch { border-radius: var(--radius-md); padding: 16px; min-height: 100px; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: var(--shadow-sm); border: var(--border-hairline); }
+.swatch.dark { color: white; }
+.name { font-weight: 700; font-size: 13px; }
+.hex  { font-family: var(--mono-font); font-size: 11px; opacity: 0.75; margin-top: 2px; }
+.token { font-size: 10px; opacity: 0.6; margin-top: 2px; }
+</style></head>
+<body>
+<div class="grid">
+  <div class="swatch" style="background:#fdfbf7"><div class="name">BG Cream</div><div class="hex">#FDFBF7</div><div class="token">--bg-cream</div></div>
+  <div class="swatch" style="background:#f9f7f4"><div class="name">BG Light</div><div class="hex">#F9F7F4</div><div class="token">--bg-light</div></div>
+  <div class="swatch dark" style="background:#1e1e1e"><div class="name">Text Dark</div><div class="hex">#1E1E1E</div><div class="token">--text-dark</div></div>
+  <div class="swatch dark" style="background:#6c757d"><div class="name">Text Muted</div><div class="hex">#6C757D</div><div class="token">--text-muted</div></div>
+</div>
+</body></html>

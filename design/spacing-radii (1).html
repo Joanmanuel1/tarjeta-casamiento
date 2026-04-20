@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding: 20px 24px; background: var(--bg-cream); font-family: var(--modern-font); }
+.wrap { display:flex; gap: 18px; align-items:flex-start; }
+.radius { width: 72px; }
+.box { height: 44px; background: white; border: 1px solid rgba(212,163,115,.35); }
+.r-pill { border-radius: 9999px; }
+.r-xl   { border-radius: 24px; }
+.r-lg   { border-radius: 16px; }
+.r-md   { border-radius: 10px; }
+.r-sm   { border-radius: 6px; }
+.r-xs   { border-radius: 3px; }
+.lbl { font-size: 9px; color: var(--text-muted); font-family: var(--mono-font); text-align: center; margin-top: 6px; letter-spacing: .02em; }
+.val { font-size: 10px; color: var(--text-dark); font-weight: 600; text-align:center; margin-top: 2px; }
+</style></head>
+<body>
+<div class="wrap">
+  <div class="radius"><div class="box r-pill"></div><div class="val">pill</div><div class="lbl">--pill</div></div>
+  <div class="radius"><div class="box r-xl"></div><div class="val">24</div><div class="lbl">--xl</div></div>
+  <div class="radius"><div class="box r-lg"></div><div class="val">16</div><div class="lbl">--lg</div></div>
+  <div class="radius"><div class="box r-md"></div><div class="val">10</div><div class="lbl">--md</div></div>
+  <div class="radius"><div class="box r-sm"></div><div class="val">6</div><div class="lbl">--sm</div></div>
+  <div class="radius"><div class="box r-xs"></div><div class="val">3</div><div class="lbl">--xs</div></div>
+</div>
+</body></html>

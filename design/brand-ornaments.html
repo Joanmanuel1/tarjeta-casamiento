@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding: 28px; background: var(--bg-cream); font-family: var(--modern-font); }
+.ornament { display:flex; align-items:center; justify-content:center; gap: 1rem; padding: 8px 0; }
+.line { flex: 1; max-width: 140px; height: 1px; background: linear-gradient(90deg, transparent, #d4a373, transparent); }
+.glyph { color: #d4a373; font-size: 16px; opacity: .7; }
+.wave { width: 100%; margin-top: 18px; }
+.caption { text-align:center; font-size: 11px; color: var(--text-muted); margin-top: 12px; letter-spacing: .1em; text-transform: uppercase; }
+</style></head>
+<body>
+<div class="ornament"><span class="line"></span><span class="glyph">✦</span><span class="line"></span></div>
+<svg class="wave" viewBox="0 0 1440 50" preserveAspectRatio="none" height="50">
+  <path d="M0,25 C480,55 960,-5 1440,25 L1440,50 L0,50 Z" fill="#d4a373" opacity=".55" />
+</svg>
+<div class="caption">Section dividers · ornament + SVG wave</div>
+</body></html>
